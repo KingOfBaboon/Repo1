@@ -86,4 +86,90 @@ public class MainTest {
 
 
     }
+
+    @Test
+    public void findKthLargest() {
+        int[] nums1 = {3,3,3,3,3};
+        int k1 = 1;
+        assertEquals(3, main.findKthLargest(nums1, k1));
+    }
+
+    @Test
+    public void frequencySort() {
+        String input1 = "tree";
+        String output = main.frequencySort(input1);
+        boolean b = output.equals("eert") || output.equals("eetr");
+        assertEquals(true, b);
+
+    }
+
+    @Test
+    public void topKFrequent() {
+    }
+
+    @Test
+    public void sortColors() {
+        int[] nums = {2, 0, 1};
+        main.sortColors(nums);
+        int[] expected = {0, 1, 2};
+        assertTrue(Arrays.equals(expected, nums));
+    }
+
+    @Test
+    public void findContentChildren() {
+    }
+
+    @Test
+    public void eraseOverlapIntervals() {
+    }
+
+    @Test
+    public void reconstructQueue() {
+    }
+
+    @Test
+    public void partitionLabels() {
+    }
+
+    @Test
+    public void canPlaceFlowers() {
+    }
+
+    @Test
+    public void isSubsequence() {
+    }
+
+    @Test
+    public void checkPossibility() {
+        int[] input = {2,3,2,4};
+        assertEquals(true, main.checkPossibility(input));
+    }
+
+    @Test
+    public void maxProfit() {
+    }
+
+    @Test
+    public void mySqrt() {
+        main.mySqrt(4);
+    }
+
+    @Test
+    public void nextGreatestLetter() {
+        System.out.println('a' - 'z');
+    }
+
+    @Test
+    public void singleNonDuplicate() {
+        main.singleNonDuplicate(new int[]{1, 1, 2});
+    }
+
+    @Test
+    public void firstBadVersion() {
+    }
+
+    @Test
+    public void findMin() {
+        main.findMin(new int[]{1,2});
+    }
 }
