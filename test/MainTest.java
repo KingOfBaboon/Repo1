@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -171,5 +172,24 @@ public class MainTest {
     @Test
     public void findMin() {
         main.findMin(new int[]{1,2});
+    }
+
+    @Test
+    public void diffWaysToCompute() {
+        main.diffWaysToCompute("2-1-1");
+    }
+
+    @Test
+    public void numSquares_bfs() {
+    }
+
+    @Test
+    public void numSquares_dp() {
+    }
+
+    @Test
+    public void ladderLength() {
+        int a = main.ladderLength("hit", "cog", new LinkedList<>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog")));
+        System.out.println(a);
     }
 }

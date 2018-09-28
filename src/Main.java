@@ -546,8 +546,140 @@ public class Main {
         return nums[l + 1];
     }
 
+    //divide and conquer
+    //    241. Different Ways to Add Parentheses
+    //    https://leetcode.com/problems/different-ways-to-add-parentheses/description/
+    Map<String, List<Integer>> diffWaysToComputeCache = new HashMap<>();
+
+    public List<Integer> diffWaysToCompute(String input) {
+        if (diffWaysToComputeCache.containsKey(input)) {
+            return diffWaysToComputeCache.get(input);
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < input.length(); i++) {
+            char currentChar = input.charAt(i);
+            if (currentChar == '+'
+                    || currentChar == '-'
+                    || currentChar == '*') {
+                List<Integer> part1 = diffWaysToCompute(input.substring(0, i));
+                List<Integer> part2 = diffWaysToCompute(input.substring(i + 1));
+                for (Integer i1 : part1) {
+                    for (Integer i2 : part2) {
+                        switch (currentChar) {
+                            case '+':
+                                result.add(i1 + i2);
+                                break;
+                            case '-':
+                                result.add(i1 - i2);
+                                break;
+                            case '*':
+                                result.add(i1 * i2);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        if (result.size() == 0) {
+            result.add(Integer.valueOf(input));
+        }
+        diffWaysToComputeCache.put(input, result);
+        return result;
+    }
+
+    //BFS
+    //    279. Perfect Squares;
+    //    https://leetcode.com/problems/perfect-squares/description/
+    public int numSquares_bfs(int n) {
+        int level = 0;
+        boolean[] visited = new boolean[n + 1];
+        Queue<Integer> q = new LinkedList<>();
+        q.add(n);
+        while (!q.isEmpty()) {
+            level++;
+            int currentSize = q.size();
+            while (currentSize-- > 0) {
+                int currentInt = q.poll();
+                if (!visited[currentInt]) {
+                    visited[currentInt] = true;
+                    for (int j = (int) Math.sqrt(currentInt); j > 0; j--) {
+                        if (currentInt - j * j == 0) {
+                            return level;
+                        } else {
+                            q.add(currentInt - j * j);
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int numSquares_dp(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, n);
+        dp[0] = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                dp[i] = Math.min(dp[i], dp[i - j * j] + 1);
+            }
+        }
+        return dp[n];
+    }
+
+    //    127. Word Ladder
+    //    https://leetcode.com/problems/word-ladder/description/
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        int level = 1;
+        Queue<String> q = new LinkedList<>();
+        q.add(beginWord);
+        while (!q.isEmpty()) {
+            level++;
+            int size = q.size();
+            while (size-- > 0) {
+                String current = q.poll();
+                Iterator<String> iterator = wordList.iterator();
+                while (iterator.hasNext()) {
+                    String word = iterator.next();
+                    if (canTransfer(current, word)) {
+                        if (word.equals(endWord)) {
+                            return level;
+                        } else {
+                            q.add(word);
+                            iterator.remove();
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    private boolean canTransfer(String a, String b) {
+        if (a.length() != b.length()) {
+            return false;
+        }
+        int count = 0;
+        for (int i = 0; i < a.length() && count < 2; i++) {
+            if (a.charAt(i) != b.charAt(i)) {
+                count++;
+            }
+        }
+        return count == 1;
+    }
+
+    //    695. Max Area of Island
+    //    https://leetcode.com/problems/max-area-of-island/description/
+    public int maxAreaOfIsland(int[][] grid) {
+        int max = 0;
+        for (int x = 0; x < grid.length; x++) {
+            for (int y = 0; y < grid[0].length; y++) {
+
+            }
+        }
 
 
 
+    }
 }
 
