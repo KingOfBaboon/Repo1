@@ -192,4 +192,168 @@ public class MainTest {
         int a = main.ladderLength("hit", "cog", new LinkedList<>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog")));
         System.out.println(a);
     }
+
+    @Test
+    public void maxAreaOfIsland() {
+    }
+
+    @Test
+    public void numIslands() {
+        main.numIslands(new char[][]{{'1','1','0','0','0'},{'1','1','0','0','0'},{'0','0','1','0','0'},{'0','0','0','1','1'}});
+    }
+
+    @Test
+    public void letterCombinations() {
+    }
+
+    @Test
+    public void restoreIpAddresses() {
+        System.out.println(main.restoreIpAddresses("11111111111111111111111111111111111111"));
+    }
+
+    @Test
+    public void climbStairs() {
+        main.climbStairs(4);
+    }
+
+    @Test
+    public void rob() {
+    }
+
+    @Test
+    public void countPrimes() {
+        System.out.println(main.countPrimes(499979));
+    }
+
+    @Test
+    public void getIntersectionNode() {
+    }
+
+    @Test
+    public void reverseList_tieration() {
+    }
+
+    @Test
+    public void reverseList_recursive() {
+    }
+
+    @Test
+    public void maxDepth() {
+    }
+
+    @Test
+    public void isBalanced() {
+    }
+
+    @Test
+    public void diameterOfBinaryTree() {
+        TreeNode node1 = new TreeNode(1);
+        TreeNode node2 = new TreeNode(1);
+        TreeNode node3 = new TreeNode(1);
+        TreeNode node4 = new TreeNode(1);
+        TreeNode node5 = new TreeNode(1);
+        node1.left = node2;
+        node1.right = node3;
+        node2.left = node4;
+        node2.right = node5;
+        main.diameterOfBinaryTree(node1);
+    }
+
+    @Test
+    public void isValid() {
+        main.isValid("()");
+    }
+
+    @Test
+    public void dailyTemperatures() {
+        main.dailyTemperatures(new int[]{5, 4, 3, 6});
+    }
+
+    @Test
+    public void twoSum_no1() {
+    }
+
+    @Test
+    public void findLHS() {
+    }
+
+    @Test
+    public void longestConsecutive() {
+    }
+
+    @Test
+    public void isAnagram() {
+    }
+
+    @Test
+    public void longestPalindrome() {
+    }
+
+    @Test
+    public void isIsomorphic() {
+        System.out.println((int) 'a');
+        System.out.println((int) 'A');
+        System.out.println((int) 'z');
+        System.out.println((int) 'Z');
+        main.isIsomorphic("ab", "aa");
+    }
+
+    @Test
+    public void countSubstrings() {
+    }
+
+    @Test
+    public void countBinarySubstrings() {
+    }
+
+    @Test
+    public void moveZeroes() {
+    }
+
+    @Test
+    public void matrixReshape() {
+    }
+
+    @Test
+    public void findMaxConsecutiveOnes() {
+    }
+
+    @Test
+    public void searchMatrix() {
+    }
+
+    @Test
+    public void isBipartite() {
+    }
+
+    @Test
+    public void canFinish() {
+    }
+
+    @Test
+    public void findOrder() {
+        main.findOrder(2, new int[][]{{1, 0}});
+    }
+
+    @Test
+    public void findCircleNum() {
+        int[][] a =new int[1][1];
+        a[0][0] = 1;
+        main.findCircleNum(a);
+    }
+
+    @Test
+    public void solve() {
+    }
+
+    @Test
+    public void pacificAtlantic() {
+    }
+
+    @Test
+    public void exist() {
+        char[][] board = new char[][]{{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
+        String word = "ABCCED";
+        main.exist(board, word);
+    }
 }
