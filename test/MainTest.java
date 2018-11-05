@@ -1,5 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -355,5 +357,214 @@ public class MainTest {
         char[][] board = new char[][]{{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
         String word = "ABCCED";
         main.exist(board, word);
+    }
+
+    @Test
+    public void binaryTreePaths() {
+    }
+
+    @Test
+    public void permute() {
+    }
+
+    @Test
+    public void permuteBacktrack() {
+    }
+
+    @Test
+    public void permuteUnique() {
+    }
+
+    @Test
+    public void combine() {
+        main.combine(4, 2);
+    }
+
+    @Test
+    public void combinationSum() {
+        main.combinationSum(new int[]{2, 3, 6, 7}, 7);
+    }
+
+    @Test
+    public void combinationSum2() {
+    }
+
+    @Test
+    public void combinationSum3() {
+    }
+
+    @Test
+    public void subsets() {
+    }
+
+    @Test
+    public void subsetsWithDup() {
+    }
+
+    @Test
+    public void partition() {
+    }
+
+    @Test
+    public void solveSudoku() {
+        char[][] board = new char[][]{{'5', '3', '.', '.', '7', '.', '.', '.', '.'}, {'6', '.', '.', '1', '9', '5', '.', '.', '.'}, {'.', '9', '8', '.', '.', '.', '.', '6', '.'}, {'8', '.', '.', '.', '6', '.', '.', '.', '3'}, {'4', '.', '.', '8', '.', '3', '.', '.', '1'}, {'7', '.', '.', '.', '2', '.', '.', '.', '6'}, {'.', '6', '.', '.', '.', '.', '2', '8', '.'}, {'.', '.', '.', '4', '1', '9', '.', '.', '5'}, {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+        main.solveSudoku(board);
+    }
+
+
+    @Test
+    public void solveNQueens() {
+        main.solveNQueens(6);
+    }
+
+    @Test
+    public void rob2() {
+        main.rob2(new int[]{1});
+    }
+
+    @Test
+    public void minPathSum() {
+    }
+
+    @Test
+    public void uniquePaths() {
+    }
+
+    @Test
+    public void numberOfArithmeticSlices() {
+    }
+
+    @Test
+    public void integerBreak() {
+    }
+
+    @Test
+    public void numDecodings() {
+        assertEquals(0, main.numDecodings("0"));
+        assertEquals(0, main.numDecodings("0000"));
+        assertEquals(0, main.numDecodings("001"));
+        assertEquals(0, main.numDecodings("010"));
+        assertEquals(2, main.numDecodings("12"));
+        assertEquals(0, main.numDecodings("100"));
+        assertEquals(1, main.numDecodings("101"));
+    }
+
+    @Test
+    public void lengthOfLIS_DP() {
+    }
+
+    @Test
+    public void lengthOfLIS_Tail() {
+        main.lengthOfLIS_Tail(new int[]{10, 9, 2, 5, 3, 7, 101, 18});
+    }
+
+    @Test
+    public void findLongestChain() {
+    }
+
+    @Test
+    public void findLongestChain_Greedy() {
+    }
+
+    @Test
+    public void justify() {
+        assertEquals("The  quick  brown  fox  jumps  over  the  lazy  dog.", main.justify("The quick brown fox jumps over the lazy dog.", 52));
+        assertEquals("foo   bar  bar  foo.", main.justify("foo bar bar foo.", 20));
+    }
+
+    @Test
+    public void fullJustify() {
+        List<String> result = main.fullJustify(new String[]{"Here", "is", "an", "example", "of", "text", "justification."}, 14);
+        System.out.println(result);
+    }
+
+    @Test
+    public void wiggleMaxLength() {
+        main.wiggleMaxLength(new int[]{1,17,5,10,13,15,10,5,16,8});
+    }
+
+    @Test
+    public void knapsack() {
+        int a = main.knapsack(5, 3, new int[]{1, 2, 3}, new int[]{6, 10, 12});
+        System.out.println(a);
+    }
+
+    @Test
+    public void knapsack2() {
+        int a = main.knapsack2(5, 3, new int[]{1, 2, 3}, new int[]{6, 10, 12});
+        System.out.println(a);
+    }
+
+    @Test
+    public void canPartition() {
+        System.out.println(main.canPartition(new int[]{1, 1}));
+    }
+
+    @Test
+    public void canPartitionBack() {
+        boolean b = main.canPartitionBack(new int[]{1, 2, 5});
+        System.out.println(b);
+    }
+
+    @Test
+    public void canPartitionBack2() {
+    }
+
+    @Test
+    public void findTargetSumWays() {
+        int a = main.findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3);
+        System.out.println(a);
+    }
+
+    @Test
+    public void findTargetSumWaysDFS() {
+    }
+
+    @Test
+    public void wordBreak() {
+        String s = "12";
+        s = s.substring(2);
+
+        main.wordBreak("catsandog", Arrays.asList("cats", "dog", "sand", "and", "cat"));
+    }
+
+    @Test
+    public void findMaxForm() {
+    }
+
+    @Test
+    public void coinChange() {
+    }
+
+    @Test
+    public void maxProfit1() {
+    }
+
+    @Test
+    public void maxProfit2() {
+    }
+
+    @Test
+    public void maxProfit3() {
+        main.maxProfit3(new int[]{3, 2, 6, 5, 0, 3});
+
+    }
+
+    @Test
+    public void combinationSum4() {
+    }
+
+    @Test
+    public void maxProfitDpCompact2() {
+        main.maxProfitDpCompact2(new int[]{3, 3, 5, 0, 0, 3, 1, 4});
+    }
+
+    @Test
+    public void maxProfit3SpaceOptimize() {
+        main.maxProfit3SpaceOptimize(new int[]{3, 2, 6, 5, 0, 3});
+    }
+
+    @Test
+    public void maxProfit4SpaceOptimize() {
     }
 }
