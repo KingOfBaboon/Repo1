@@ -1,10 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
+import org.w3c.dom.NodeList;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -555,16 +553,264 @@ public class MainTest {
     }
 
     @Test
-    public void maxProfitDpCompact2() {
-        main.maxProfitDpCompact2(new int[]{3, 3, 5, 0, 0, 3, 1, 4});
-    }
-
-    @Test
     public void maxProfit3SpaceOptimize() {
         main.maxProfit3SpaceOptimize(new int[]{3, 2, 6, 5, 0, 3});
     }
 
     @Test
     public void maxProfit4SpaceOptimize() {
+    }
+
+    @Test
+    public void maxProfit5() {
+    }
+
+    @Test
+    public void maxProfit6() {
+    }
+
+    @Test
+    public void minDistance() {
+    }
+
+    @Test
+    public void minDistance72() {
+        int a = main.minDistance72("horse", "ros");
+        System.out.println(a);
+    }
+
+    @Test
+    public void minSteps() {
+        int a = Integer.valueOf("1");
+        int b = (int) "1".charAt(0);
+        System.out.println(a);
+        System.out.println(b);
+    }
+
+    @Test
+    public void minStepsDP() {
+        main.minStepsDP(6);
+    }
+
+    @Test
+    public void convertToBase7() {
+        int i = 5;
+        char a = (char) 45345345;
+        System.out.println(a);
+        System.out.println(main.convertToBase7(100));
+        System.out.println(main.convertToBase7(-7));
+        System.out.println(main.convertToBase7(-0));
+    }
+
+    @Test
+    public void convertToTitle() {
+    }
+
+    @Test
+    public void trailingZeroes() {
+    }
+
+    @Test
+    public void addBinary() {
+        System.out.println(main.addBinary("11", "1"));
+        System.out.println();
+    }
+
+    @Test
+    public void addStrings() {
+    }
+
+    @Test
+    public void minMoves2() {
+    }
+
+    @Test
+    public void majorityElement() {
+    }
+
+    @Test
+    public void majorityElementSort() {
+    }
+
+    @Test
+    public void isPerfectSquare() {
+        main.isPerfectSquare(2147483647);
+    }
+
+    @Test
+    public void isPowerOfThree() {
+    }
+
+    @Test
+    public void productExceptSelf() {
+    }
+
+    @Test
+    public void maximumProduct() {
+    }
+
+    @Test
+    public void mergeTwoLists() {
+    }
+
+    @Test
+    public void deleteDuplicates() {
+        ListNode a = new ListNode(new int[]{1, 1, 2, 3, 3});
+        a.printListNodes();
+        main.deleteDuplicates(a);
+        a.printListNodes();
+    }
+
+    @Test
+    public void removeNthFromEnd() {
+        ListNode a = new ListNode(new int[]{1, 2,3,4,5});
+        ListNode b = main.removeNthFromEnd(a, 3);
+        b.printListNodes();
+    }
+
+    @Test
+    public void swapPairs() {
+        ListNode a = new ListNode(new int[]{1, 2, 3, 4});
+        ListNode b = main.swapPairs(a);
+        b.printListNodes();
+    }
+
+    @Test
+    public void addTwoNumbers() {
+        main.addTwoNumbers(new ListNode(new int[]{7, 2, 4, 3}), new ListNode(new int[]{5, 6, 4})).printListNodes();
+    }
+
+    @Test
+    public void isPalindrome2() {
+        int a = 5;
+        while (a-- > 0) {
+            System.out.println(a);
+        }
+    }
+
+    @Test
+    public void splitListToParts() {
+        ListNode a = new ListNode(new int[]{1, 2, 3, 4});
+        main.splitListToParts(a, 5);
+    }
+
+    @Test
+    public void oddEvenList() {
+        List<NodeList> a = new ArrayList<>();
+        a.add(null);
+        System.out.println(a.size());
+    }
+
+    @Test
+    public void invertTree() {
+    }
+
+    @Test
+    public void mergeTrees() {
+    }
+
+    @Test
+    public void hasPathSum() {
+    }
+
+    @Test
+    public void pathSum113() {
+    }
+
+    @Test
+    public void pathSum() {
+    }
+
+    @Test
+    public void isSubtree() {
+    }
+
+    @Test
+    public void isSymmetric() {
+    }
+
+    @Test
+    public void minDepth() {
+    }
+
+    @Test
+    public void sumOfLeftLeaves() {
+    }
+
+    @Test
+    public void longestUnivaluePath() {
+    }
+
+    @Test
+    public void findSecondMinimumValue() {
+    }
+
+    @Test
+    public void averageOfLevels() {
+        TreeNode a = new TreeNode(3);
+        main.averageOfLevels(a);
+    }
+
+    @Test
+    public void findBottomLeftValue() {
+    }
+
+    @Test
+    public void preorderTraversal() {
+    }
+
+    @Test
+    public void postorderTraversal() {
+    }
+
+    @Test
+    public void inorderTraversal() {
+    }
+
+    @Test
+    public void trimBST() {
+    }
+
+    @Test
+    public void kthSmallest() {
+        TreeNode a = new TreeNode(Arrays.asList(3, 1, 4, null, 2));
+        main.kthSmallest(a, 1);
+    }
+
+    @Test
+    public void convertBST() {
+    }
+
+    @Test
+    public void lowestCommonAncestor() {
+    }
+
+    @Test
+    public void lowestCommonAncestor236() {
+    }
+
+    @Test
+    public void sortedArrayToBST() {
+        Integer aa = null;
+        int bb = 5;
+        System.out.println(aa == bb);
+    }
+
+    @Test
+    public void sortedListToBST() {
+    }
+
+    @Test
+    public void findTarget() {
+    }
+
+    @Test
+    public void getMinimumDifference() {
+    }
+
+    @Test
+    public void findMode() {
+        TreeNode a = new TreeNode(Arrays.asList(1, null, 2, 2));
+        main.findMode(a);
     }
 }

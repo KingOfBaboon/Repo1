@@ -1827,6 +1827,21 @@ public class Main {
         return dp[amount] > amount ? -1 : dp[amount];
     }
 
+    //    377. Combination Sum IV
+    //    https://leetcode.com/problems/combination-sum-iv/
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for (int i = 1; i <= target; i++) {
+            for (int num : nums) {
+                if (i >= num) {
+                    dp[i] += dp[i - num];
+                }
+            }
+        }
+        return dp[target];
+    }
+
 
     //    121. Best Time to Buy and Sell Stock
     //    https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
@@ -1940,32 +1955,90 @@ public class Main {
     }
 
 
+    // Strings
 
-
-
-
-
-
-    //    377. Combination Sum IV
-    //    https://leetcode.com/problems/combination-sum-iv/
-    public int combinationSum4(int[] nums, int target) {
-        int[] dp = new int[target + 1];
-        dp[0] = 1;
-        for (int i = 1; i <= target; i++) {
-            for (int num : nums) {
-                if (i >= num) {
-                    dp[i] += dp[i - num];
+    //    583. Delete Operation for Two Strings
+    //    https://leetcode.com/problems/delete-operation-for-two-strings/
+    public int minDistance(String word1, String word2) {
+        if (word1.length()  == 0 || word2.length() == 0) {
+            return Math.max(word1.length(), word2.length());
+        }
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for (int i = 1; i <= word1.length(); i++) {
+            for (int j = 1; j <= word2.length(); j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
                 }
             }
         }
-        return dp[target];
+        return word1.length() + word2.length() - (2 * dp[word1.length()][word2.length()]);
     }
 
-    //    309. Best Time to Buy and Sell Stock with Cooldown
-    //    https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/
-    public int maxProfit(int[] prices) {
-        return 0;
+    //    72. Edit Distance
+    //    https://leetcode.com/problems/edit-distance/description/
+    public int minDistance72(String word1, String word2) {
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for (int i = 0; i <= word1.length(); i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= word2.length(); j++) {
+            dp[0][j] = j;
+        }
+        for (int i = 1; i <= word1.length(); i++) {
+            for (int j = 1; j <= word2.length(); j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    int add = dp[i - 1][j] + 1;
+                    int sub = dp[i][j - 1] + 1;
+                    int replace = dp[i - 1][j - 1] + 1;
+                    dp[i][j] = Math.min(Math.min(add, sub), replace);
+                }
+
+            }
+        }
+        return dp[word1.length()][word2.length()];
     }
+
+    //    650. 2 Keys Keyboard
+    //    https://leetcode.com/problems/2-keys-keyboard/
+    public int minSteps(int n) {
+        if (n == 1) {
+            return 0;
+        }
+        for (int i = 2; i < n; i++) {
+            if (n % i == 0) {
+                return minSteps(n / i) + i;
+            }
+        }
+        return n;
+    }
+
+    public int minStepsDP(int n) {
+        if (n == 1) {
+            return 0;
+        }
+        int[] dp = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            for (int j = 2; j <= n; j++) {
+                if (i % j == 0) {
+                    dp[i] = dp[i / j] + j;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -2001,6 +2074,196 @@ public class Main {
         }
         return count;
     }
+
+    //    504. Base 7
+    //    https://leetcode.com/problems/base-7/description/
+    public String convertToBase7(int num) {
+        StringBuilder stringBuilder = new StringBuilder();
+        while (num / 7 != 0) {
+            stringBuilder.insert(0, Math.abs(num % 7));
+            num = num / 7;
+        }
+        stringBuilder.insert(0, num);
+        return stringBuilder.toString();
+    }
+
+    //    168. Excel Sheet Column Title
+    //    https://leetcode.com/problems/excel-sheet-column-title/
+    public String convertToTitle(int n) {
+        StringBuilder stringBuilder = new StringBuilder();
+        while (n > 0) {
+            n--;
+            stringBuilder.insert(0, (char) (n % 26 + 'A'));
+            n = n / 26;
+        }
+        return stringBuilder.toString();
+    }
+
+    //factorial
+
+    //    172. Factorial Trailing Zeroes
+    //    https://leetcode.com/problems/factorial-trailing-zeroes/
+    public int trailingZeroes(int n) {
+        int result = 0;
+        while (n > 0) {
+            result += n / 5;
+            n  = n / 5;
+        }
+        return result;
+    }
+
+    // string add sub
+    //    67. Add Binary
+    //    https://leetcode.com/problems/add-binary/
+    public String addBinary(String a, String b) {
+        if (a.length() == 0 || b.length() == 0) {
+            return a + b;
+        }
+        StringBuilder sb = new StringBuilder();
+        int carry = 0;
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        while (i >= 0 || j >= 0) {
+            int ai = i >= 0 ? Character.getNumericValue(a.charAt(i)) : 0;
+            int bj = j >= 0 ? Character.getNumericValue(b.charAt(j)) : 0;
+            int v = ai + bj + carry;
+
+            sb.insert(0, v % 2);
+            carry = v / 2;
+            i--;
+            j--;
+        }
+        if (carry > 0) {
+            sb.insert(0, 1);
+        }
+        return sb.toString();
+    }
+
+    //    415. Add Strings
+    //    https://leetcode.com/problems/add-strings/
+    public String addStrings(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int carry = 0;
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        while (i >= 0 || j >= 0) {
+            int ai = i >= 0 ? Character.getNumericValue(a.charAt(i)) : 0;
+            int bj = j >= 0 ? Character.getNumericValue(b.charAt(j)) : 0;
+            int v = ai + bj + carry;
+            sb.insert(0, v % 10);
+            carry = v / 10;
+            i--;
+            j--;
+        }
+        if (carry > 0) {
+            sb.insert(0, 1);
+        }
+        return sb.toString();
+    }
+
+    //    462. Minimum Moves to Equal Array Elements II
+    //    https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii/
+    public int minMoves2(int[] nums) {
+        Arrays.sort(nums);
+        int median = nums[nums.length / 2];
+        int result = 0;
+        for (int i : nums) {
+            result += Math.abs(i - median);
+        }
+        return result;
+    }
+
+    //    169 .Majority Element
+    //    https://leetcode.com/problems/majority-element/
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : nums) {
+            map.put(i, map.getOrDefault(i, 0) + 1);
+            if (map.get(i) > nums.length / 2) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public int majorityElementSort(int[] nums) {
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+    }
+
+    // others
+    //    367. Valid Perfect Square
+    //    https://leetcode.com/problems/valid-perfect-square/
+    public boolean isPerfectSquare(int num) {
+        long l = 1;
+        long h = num;
+        while (l <= h) {
+            long m = l + (h - l) / 2;
+            if (m * m == num) {
+                return true;
+            } else if (m * m > num) {
+                h = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        return false;
+    }
+
+    //    326. Power of Three
+    //    https://leetcode.com/problems/power-of-three/
+    public boolean isPowerOfThree(int n) {
+        if (n == 0) {
+            return false;
+        }
+        while (n % 3 == 0) {
+            n /= 3;
+        }
+        return n == 1;
+    }
+
+    //    238. Product of Array Except Self
+    //    https://leetcode.com/problems/product-of-array-except-self/
+    public int[] productExceptSelf(int[] nums) {
+        int[] result = new int[nums.length];
+        Arrays.fill(result, 1);
+        int temp = 1;
+        for (int i = 1; i < nums.length; i++) {
+            temp *= nums[i - 1];
+            result[i] *= temp;
+        }
+        temp = 1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            temp *= nums[i + 1];
+            result[i] *= temp;
+        }
+        return result;
+    }
+
+    //    628. Maximum Product of Three Numbers
+    //    https://leetcode.com/problems/maximum-product-of-three-numbers/
+    public int maximumProduct(int[] nums) {
+        PriorityQueue<Integer> max3 = new PriorityQueue<>();
+        PriorityQueue<Integer> min2 = new PriorityQueue<>((o1, o2) -> o2 - o1);
+        for (int i : nums) {
+            if (max3.size() < 3) {
+                max3.offer(i);
+            } else if (i > max3.peek()) {
+                max3.poll();
+                max3.offer(i);
+            }
+            if (min2.size() < 2) {
+                min2.offer(i);
+            } else if (i < min2.peek()) {
+                min2.poll();
+                min2.offer(i);
+            }
+        }
+        return Math.max(max3.poll() * max3.poll() * max3.peek(), min2.poll() * min2.poll() * max3.peek());
+    }
+
+
+
 
     //    linked list
     //    160. Intersection of Two Linked Lists
@@ -2041,6 +2304,187 @@ public class Main {
         return newHead;
     }
 
+    //    21. Merge Two Sorted Lists
+    //    https://leetcode.com/problems/merge-two-sorted-lists/
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val < l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        if (l1 == null) {
+            tail.next = l2;
+        } else {
+            tail.next = l1;
+        }
+        return dummy.next;
+    }
+
+    //    83. Remove Duplicates from Sorted List
+    //    https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode result = head;
+        while (head != null && head.next != null) {
+            while (head.next != null && head.val == head.next.val) {
+                head.next = head.next.next;
+            }
+            head = head.next;
+        }
+        return result;
+    }
+
+    //    19. Remove Nth Node From End of List
+    //    https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode node = dummy;
+        ListNode target = dummy;
+        while (node.next != null) {
+            if (n > 0) {
+                n--;
+                node = node.next;
+            } else {
+                node = node.next;
+                target = target.next;
+            }
+        }
+        target.next = target.next.next;
+        return dummy.next;
+    }
+
+    //    24. Swap Nodes in Pairs
+    //    https://leetcode.com/problems/swap-nodes-in-pairs/
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode pre = dummy;
+        while (head != null && head.next != null) {
+            ListNode next = head.next.next;
+            pre.next = head.next;
+            head.next.next = head;
+            pre = head;
+            head.next = next;
+            head = head.next;
+        }
+        return dummy.next;
+    }
+
+    //    445. Add Two Numbers II
+    //    https://leetcode.com/problems/add-two-numbers-ii/
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Deque<Integer> stack1 = new LinkedList<>();
+        Deque<Integer> stack2 = new LinkedList<>();
+        while (l1 != null) {
+            stack1.push(l1.val);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            stack2.push(l2.val);
+            l2 = l2.next;
+        }
+        ListNode dummy = new ListNode(0);
+        int carry = 0;
+        while (!stack1.isEmpty() || !stack2.isEmpty() || carry == 1) {
+            int n1 = stack1.isEmpty() ? 0 : stack1.pop();
+            int n2 = stack2.isEmpty() ? 0 : stack2.pop();
+            int v = n1 + n2 + carry;
+            ListNode head = dummy.next;
+            dummy.next = new ListNode(v % 10);
+            dummy.next.next = head;
+            carry = v / 10;
+        }
+        return dummy.next;
+    }
+
+    //    234. Palindrome Linked List
+    //    https://leetcode.com/problems/palindrome-linked-list/
+    public boolean isPalindrome(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        slow = reverseList_recursive(slow);
+        while (slow != null) {
+            if (head.val != slow.val) {
+                return false;
+            }
+            slow = slow.next;
+            head = head.next;
+        }
+        return true;
+    }
+
+    //    725. Split Linked List in Parts
+    //    https://leetcode.com/problems/split-linked-list-in-parts/
+    public ListNode[] splitListToParts(ListNode root, int k) {
+        int length = 0;
+        ListNode node = root;
+        while (node != null) {
+            length++;
+            node = node.next;
+        }
+        int[] partsLength = new int[k];
+        Arrays.fill(partsLength, length / k);
+        int rest = length % k;
+        ListNode[] result = new ListNode[k];
+        node = root;
+        for (int i = 0; i < k; i++) {
+            if (rest > 0) {
+                partsLength[i]++;
+                rest--;
+            }
+            while (partsLength[i]-- > 0) {
+                result[i] = result[i] == null ? node : result[i];
+                if (partsLength[i] == 0) {
+                    ListNode pre = node;
+                    node = node.next;
+                    pre.next = null;
+                } else {
+                    node = node.next;
+                }
+            }
+        }
+        return result;
+    }
+
+    //    328. Odd Even Linked List
+    //    https://leetcode.com/problems/odd-even-linked-list/
+    public ListNode oddEvenList(ListNode head) {
+        int index = 0;
+        ListNode oddHead = new ListNode(0);
+        ListNode oddTail = oddHead;
+        ListNode evenHead = new ListNode(0);
+        ListNode evenTail = evenHead;
+        while (head != null) {
+            boolean isOdd = ++index % 2 == 1;
+            if (isOdd) {
+                oddTail.next = head;
+                oddTail = oddTail.next;
+            } else {
+                evenTail.next = head;
+                evenTail = evenTail.next;
+            }
+            head = head.next;
+        }
+        evenTail.next = null;
+        oddTail.next = evenHead.next;
+        return oddHead.next;
+    }
+
+
+
+    // tree
+
     //    104. Maximum Depth of Binary Tree
     //    https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
     public int maxDepth(TreeNode root) {
@@ -2071,6 +2515,525 @@ public class Main {
         int diameterWithRoot = maxDepth(root.left) + maxDepth(root.right);
         return Math.max(Math.max(diameterOfBinaryTree(root.left), diameterOfBinaryTree(root.right)), diameterWithRoot);
     }
+
+    //    226. Invert Binary Tree
+    //    https://leetcode.com/problems/invert-binary-tree/
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) {
+            return root;
+        }
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        invertTree(root.left);
+        invertTree(root.right);
+        return root;
+    }
+
+    //    617. Merge Two Binary Trees
+    //    https://leetcode.com/problems/merge-two-binary-trees/
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return null;
+        if (t1 == null) return t2;
+        if (t2 == null) return t1;
+        TreeNode root = new TreeNode(t1.val + t2.val);
+        root.left = mergeTrees(t1.left, t2.left);
+        root.right = mergeTrees(t1.right, t2.right);
+        return root;
+    }
+
+    //    112. Path Sum
+    //    https://leetcode.com/problems/path-sum/
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.left == null && root.right == null && root.val == sum) {
+            return true;
+        }
+        return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
+
+    //    113. Path Sum II
+    //    https://leetcode.com/problems/path-sum-ii/
+    public List<List<Integer>> pathSum113(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        pathSum113BackTrace(root, sum, result, path);
+        return result;
+    }
+
+    private void pathSum113BackTrace(TreeNode root, int sum, List<List<Integer>> result, List<Integer> path) {
+        if (root != null) {
+            path.add(root.val);
+            sum -= root.val;
+            if (sum == 0 && root.left == null && root.right == null) {
+                result.add(new ArrayList<>(path));
+            }
+            pathSum113BackTrace(root.left, sum, result, path);
+            pathSum113BackTrace(root.right, sum, result, path);
+            path.remove(path.size() - 1);
+        }
+    }
+
+    //    437. Path Sum III
+    //    https://leetcode.com/problems/path-sum-iii/
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        return pathSumWithRoot(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum);
+    }
+
+    private int pathSumWithRoot(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int result = 0;
+        if (root.val == sum) {
+            result++;
+        }
+        result += pathSumWithRoot(root.left, sum - root.val) + pathSumWithRoot(root.right, sum - root.val);
+        return result;
+    }
+
+    //    572. Subtree of Another Tree
+    //    https://leetcode.com/problems/subtree-of-another-tree/
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if (s == null || t == null) {
+            return false;
+        }
+        return isSameTree(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t);
+    }
+
+    private boolean isSameTree(TreeNode s, TreeNode t) {
+        if (s == null || t == null) {
+            return s == null && t == null;
+        }
+        return s.val == t.val && isSameTree(s.left, t.left) && isSameTree(s.right, t.right);
+    }
+
+    //    101. Symmetric Tree
+    //    https://leetcode.com/problems/symmetric-tree/
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        return isSymmetricSubtrees(root.left, root.right);
+    }
+
+    private boolean isSymmetricSubtrees(TreeNode left, TreeNode right) {
+        if (left == null || right == null) {
+            return left == null && right == null;
+        }
+        return left.val == right.val && isSymmetricSubtrees(left.left, right.right) && isSymmetricSubtrees(left.right, right.left);
+    }
+
+    //    111. Minimum Depth of Binary Tree
+    //    https://leetcode.com/problems/minimum-depth-of-binary-tree/
+    public int minDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return 1;
+        }
+        if (root.left == null) {
+            return minDepth(root.right) + 1;
+        }
+        if (root.right == null) {
+            return minDepth(root.left) + 1;
+        }
+        return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
+    }
+
+    //    404. Sum of Left Leaves
+    //    https://leetcode.com/problems/sum-of-left-leaves/
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.left != null && root.left.left == null && root.left.right == null) {
+            return root.left.val + sumOfLeftLeaves(root.right);
+        } else {
+            return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+        }
+    }
+
+    //    687. Longest Univalue Path
+    //    https://leetcode.com/problems/longest-univalue-path/
+    public int longestUnivaluePath(TreeNode root) {
+        int[] max = new int[1];
+        dfs(root, max);
+        return max[0];
+    }
+
+    private int dfs(TreeNode root, int[] max){
+        if (root == null) return 0;
+        int left = dfs(root.left, max);
+        int right = dfs(root.right, max);
+        int leftPath = root.left != null && root.left.val == root.val ? left + 1 : 0;
+        int rightPath = root.right != null && root.right.val == root.val ? right + 1 : 0;
+        max[0] = Math.max(max[0], leftPath + rightPath);
+        return Math.max(leftPath, rightPath);
+    }
+
+    //    337. House Robber III
+    //    https://leetcode.com/problems/house-robber-iii/description/
+    public int rob(TreeNode root) {
+        return robCache(root, new HashMap<>());
+    }
+
+    private int robCache(TreeNode root, Map<TreeNode, Integer> cache) {
+        if (root == null) {
+            return 0;
+        }
+        if (cache.containsKey(root)) {
+            return cache.get(root);
+        }
+        int withRoot = root.val;
+        if (root.left != null) {
+            withRoot += robCache(root.left.left, cache) + robCache(root.left.right, cache);
+        }
+        if (root.right != null) {
+            withRoot += robCache(root.right.left, cache) + robCache(root.right.right, cache);
+        }
+        int withOutRoot = 0;
+        withOutRoot += robCache(root.left, cache) + robCache(root.right, cache);
+        cache.put(root, Math.max(withRoot, withOutRoot));
+        return Math.max(withRoot, withOutRoot);
+    }
+
+    //    671. Second Minimum Node In a Binary Tree
+    //    https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/description/
+    public int findSecondMinimumValue(TreeNode root) {
+        Set<Integer> set = new HashSet<Integer>();
+        findSecondMinimumValueDFS(root, set);
+        int result = Integer.MAX_VALUE;
+        for (int v : set) {
+            if (root.val < v && v < result) {
+                result = v;
+            }
+        }
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    private void findSecondMinimumValueDFS(TreeNode root, Set<Integer> uniques) {
+        if (root != null) {
+            uniques.add(root.val);
+            findSecondMinimumValueDFS(root.left, uniques);
+            findSecondMinimumValueDFS(root.right, uniques);
+        }
+    }
+
+
+    // traverse
+
+    //    637. Average of Levels in Binary Tree
+    //    https://leetcode.com/problems/average-of-levels-in-binary-tree/description/
+    public List<Double> averageOfLevels(TreeNode root) {
+        List<Double> result = new ArrayList<>();
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        if (root != null) {
+            queue.offer(root);
+        }
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            int count = size;
+            double sum = 0;
+            while (count-- > 0) {
+                TreeNode node = queue.poll();
+                sum += node.val;
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            result.add(sum / size);
+        }
+        return result;
+    }
+
+    //    513. Find Bottom Left Tree Value
+    //    https://leetcode.com/problems/find-bottom-left-tree-value/description/
+    public int findBottomLeftValue(TreeNode root) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        Queue<TreeNode> last = new ArrayDeque<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            int count = size;
+            last = new ArrayDeque<>();
+            while (count-- > 0) {
+                TreeNode node = queue.poll();
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+                last.offer(node);
+            }
+        }
+        return last.poll().val;
+    }
+
+    //    144. Binary Tree Preorder Traversal
+    //    https://leetcode.com/problems/binary-tree-preorder-traversal/description/
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            result.add(node.val);
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+        return result;
+    }
+
+    //    145. Binary Tree Postorder Traversal
+    //    https://leetcode.com/problems/binary-tree-postorder-traversal/description/
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            result.add(node.val);
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+        }
+        Collections.reverse(result);
+        return result;
+    }
+
+    //    94. Binary Tree Inorder Traversal
+    //    https://leetcode.com/problems/binary-tree-inorder-traversal/description/
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        TreeNode node = root;
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        while (node != null || !stack.isEmpty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            node = stack.pop();
+            result.add(node.val);
+            node = node.right;
+        }
+        return result;
+    }
+
+    //    669. Trim a Binary Search Tree
+    //    https://leetcode.com/problems/trim-a-binary-search-tree/description/
+    public TreeNode trimBST(TreeNode root, int L, int R) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val < L) {
+            return trimBST(root.right, L, R);
+        }
+        if (root.val > R) {
+            return trimBST(root.left, L, R);
+        }
+        root.left = trimBST(root.left, L, R);
+        root.right = trimBST(root.right, L, R);
+        return root;
+    }
+
+
+    //    230. Kth Smallest Element in a BST
+    //    https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+    public int kthSmallest(TreeNode root, int k) {
+        int[] count = new int[1];
+        count[0] = k;
+        return kthSmallestDFS(root, count);
+
+    }
+
+    private int kthSmallestDFS(TreeNode node, int[] count) {
+        if (node != null) {
+            int left = kthSmallestDFS(node.left, count);
+            if (left >= 0) {
+                return left;
+            }
+            if (--count[0] == 0) {
+                return node.val;
+            }
+            int right = kthSmallestDFS(node.right, count);
+            if (right >= 0) {
+                return right;
+            }
+        }
+        return -1;
+    }
+
+    //    538. Convert BST to Greater Tree
+    //    https://leetcode.com/problems/convert-bst-to-greater-tree/description/
+    int convertBSTSum = 0;
+
+    public TreeNode convertBST(TreeNode root) {
+        convertBSTDFS(root);
+        return root;
+    }
+
+    private void convertBSTDFS(TreeNode root) {
+        if (root != null) {
+            convertBSTDFS(root.right);
+            convertBSTSum += root.val;
+            root.val = convertBSTSum;
+            convertBSTDFS(root.left);
+
+        }
+    }
+
+    //    235. Lowest Common Ancestor of a Binary Search Tree
+    //    https://superuser.com/questions/385972/how-to-select-chrome-url-address-bar-by-using-shortcuts
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root.val > p.val && root.val > q.val) return lowestCommonAncestor(root.left, p, q);
+        if (root.val < p.val && root.val < q.val) return lowestCommonAncestor(root.right, p, q);
+        return root;
+    }
+
+    //    236. Lowest Common Ancestor of a Binary Tree
+    //    https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+    public TreeNode lowestCommonAncestor236(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+        TreeNode left = lowestCommonAncestor236(root.left, p, q);
+        TreeNode right = lowestCommonAncestor236(root.right, p, q);
+        return left == null ? right : right == null ? left : root;
+    }
+
+    //    108. Convert Sorted Array to Binary Search Tree
+    //    https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return null;
+        }
+        int mid = nums.length / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        if (0 < mid) {
+            node.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, mid));
+        }
+        if (mid + 1 < nums.length) {
+            node.right = sortedArrayToBST(Arrays.copyOfRange(nums, mid + 1, nums.length));
+        }
+        return node;
+    }
+
+    //    109. Convert Sorted List to Binary Search Tree
+    //    https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/description/
+    public TreeNode sortedListToBST(ListNode head) {
+        List<Integer> list = new ArrayList<>();
+        while (head != null) {
+            list.add(head.val);
+            head = head.next;
+        }
+        int[] array = new int[list.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = list.get(i);
+        }
+        return sortedArrayToBST(array);
+    }
+
+    //    653. Two Sum IV - Input is a BST
+    //    https://leetcode.com/problems/two-sum-iv-input-is-a-bst/description/
+    public boolean findTarget(TreeNode root, int k) {
+        List<Integer> list = inorderTraversal(root);
+        int l = 0;
+        int h = list.size() - 1;
+        while (l < h) {
+            int v = list.get(l) + list.get(h);
+            if (v == k) {
+                return true;
+            } else if (v < k) {
+                l++;
+            } else {
+                h--;
+            }
+        }
+        return false;
+    }
+
+    //    530. Minimum Absolute Difference in BST
+    //    https://leetcode.com/problems/minimum-absolute-difference-in-bst/description/
+    public int getMinimumDifference(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        getMinimumDifferenceInorder(root, list);
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < list.size(); i++) {
+            min = Math.min(min, list.get(i) - list.get(i - 1));
+        }
+        return min;
+    }
+
+
+    private void getMinimumDifferenceInorder(TreeNode root, List<Integer> list) {
+        if (root != null) {
+            getMinimumDifferenceInorder(root.left, list);
+            list.add(root.val);
+            getMinimumDifferenceInorder(root.right, list);
+        }
+    }
+
+    //    501. Find Mode in Binary Search Tree
+    //    https://leetcode.com/problems/find-mode-in-binary-search-tree/description/
+
+    int findModeCurrentCount = 0;
+    int findModeMaxCount = 0;
+    Integer findModePre = null;
+    List<Integer> findModeResult = new ArrayList<>();
+
+    public int[] findMode(TreeNode root) {
+        findModeInorder(root);
+        int[] result = new int[findModeResult.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = findModeResult.get(i);
+        }
+        return result;
+    }
+
+    private void findModeInorder(TreeNode root) {
+        if (root != null) {
+            findModeInorder(root.left);
+            if (findModePre != null && root.val == findModePre) {
+                findModeCurrentCount++;
+            } else {
+                findModeCurrentCount = 1;
+            }
+            if (findModeCurrentCount > findModeMaxCount) {
+                findModeResult.clear();
+                findModeResult.add(root.val);
+                findModeMaxCount = findModeCurrentCount;
+            } else if (findModeCurrentCount == findModeMaxCount) {
+                findModeResult.add(root.val);
+            }
+            findModePre = root.val;
+            findModeInorder(root.right);
+        }
+    }
+
+
+
 
     //     20. Valid Parentheses
     //     https://leetcode.com/problems/valid-parentheses/description/
