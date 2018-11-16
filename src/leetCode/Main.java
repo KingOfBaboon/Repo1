@@ -1,3 +1,10 @@
+package leetCode;
+
+
+import dataStructure.DSU;
+import dataStructure.ListNode;
+import dataStructure.TreeNode;
+
 import java.util.*;
 
 public class Main {
@@ -32,27 +39,27 @@ public class Main {
 
     //    633. Sum of Square Numbers
     //    https://leetcode.com/problems/sum-of-square-numbers/description/
-    public boolean judgeSquareSum(int c) {
-        int i = 1;
-        int j = (int) Math.sqrt(c);
-        while (i < j) {
-            int sum = i * i + j * j;
-            if (sum == c) {
-                return true;
-            } else if (sum < c) {
-                i++;
-            } else {
-                j--;
-            }
+    public boolean judgeSquareSum ( int c){
+    int i = 1;
+    int j = (int) Math.sqrt(c);
+    while (i < j) {
+        int sum = i * i + j * j;
+        if (sum == c) {
+            return true;
+        } else if (sum < c) {
+            i++;
+        } else {
+            j--;
         }
-        return false;
+    }
+    return false;
     }
 
 
     //    345. Reverse Vowels of a String
     //    https://leetcode.com/problems/reverse-vowels-of-a-string/description/
     public String reverseVowels(String s) {
-        Set<Character> vowels = new HashSet(Arrays.asList('a', 'e', 'i', 'o', 'u'));
+        Set<Character> vowels = new HashSet<>(Arrays.asList('a', 'e', 'i', 'o', 'u'));
         char[] sArray = s.toCharArray();
         int i = 0;
         int j = sArray.length - 1;
@@ -163,41 +170,32 @@ public class Main {
         int targetIndex = nums.length - k;
         int l = 0;
         int h = nums.length - 1;
-        int result = targetIndex;
         while (l < h) {
             int indexForFirst = partition(nums, l, h);
             if (indexForFirst == targetIndex) {
-                result = indexForFirst;
                 break;
             } else if (indexForFirst < targetIndex) {
                 l = indexForFirst + 1;
-            } else if (indexForFirst > targetIndex) {
+            } else {
                 h = indexForFirst - 1;
             }
         }
-        return nums[result];
+        return nums[targetIndex];
     }
 
     private int partition(int[] nums, int l, int h) {
-        int i = l + 1;
-        int j = h;
-        int p = nums[l];
-        while (i < j) {
-            while (i < h && nums[i] < p) {
-                i++;
-            }
-            while (j > l && nums[j] > p) {
-                j--;
-            }
+        int i = l;
+        int j = h + 1;
+        while (true) {
+            while (++i < h && nums[i] < nums[l]);
+            while (--j > l && nums[j] > nums[l]);
             if (i < j) {
                 swap(nums, i, j);
-                i++;
-                j--;
+            } else {
+                break;
             }
         }
-        if (nums[l] > nums[j]) {
-            swap(nums, l, j);
-        }
+        swap(nums, l, j);
         return j;
     }
 
@@ -210,7 +208,7 @@ public class Main {
     //    347. Top K Frequent Elements
     //    https://leetcode.com/problems/top-k-frequent-elements/description/
     public List<Integer> topKFrequent(int[] nums, int k) {
-        HashMap<Integer, Integer> map = new HashMap();
+        HashMap<Integer, Integer> map = new HashMap<>();
         for (int i : nums) {
             if (map.get(i) == null) {
                 map.put(i, 1);
@@ -320,14 +318,14 @@ public class Main {
     }
 
     public int eraseOverlapIntervals(Interval[] intervals) {
+
         if (intervals.length == 0) {
             return 0;
         }
         Arrays.sort(intervals, (o1, o2) -> o1.end - o2.end);
         int end = Integer.MIN_VALUE;
         int count = 0;
-        for (int i = 0; i < intervals.length; i++) {
-            Interval interval = intervals[i];
+        for (Interval interval : intervals) {
             if (interval.start >= end) {
                 count++;
                 end = interval.end;
@@ -388,7 +386,7 @@ public class Main {
         return n <= 0;
     }
 
-    //    392. Is Subsequence
+    //    392. Is SubSequence
     //    https://leetcode.com/problems/is-subsequence/description/
     public boolean isSubsequence(String s, String t) {
         int i = 0;
@@ -457,6 +455,8 @@ public class Main {
         return l < n ? letters[l] : letters[0];
     }
 
+    //    540. Single Element in a Sorted Array
+    //    https://leetcode.com/problems/single-element-in-a-sorted-array/description/
     public int singleNonDuplicate(int[] nums) {
         int l = 0;
         int h = nums.length - 1;
@@ -502,7 +502,7 @@ public class Main {
     }
 
     private boolean isBadVersion(int version) {
-        return true;
+        return version == 1;
     }
 
     //    153. Find Minimum in Rotated Sorted Array
@@ -576,7 +576,7 @@ public class Main {
         while (!q.isEmpty()) {
             level++;
             int currentSize = q.size();
-            while (currentSize-- > 0) {
+            while (currentSize-- > 0 && !q.isEmpty()) {
                 int currentInt = q.poll();
                 if (!visited[currentInt]) {
                     visited[currentInt] = true;
@@ -614,7 +614,7 @@ public class Main {
         while (!q.isEmpty()) {
             level++;
             int size = q.size();
-            while (size-- > 0) {
+            while (size-- > 0 && !q.isEmpty()) {
                 String current = q.poll();
                 Iterator<String> iterator = wordList.iterator();
                 while (iterator.hasNext()) {
@@ -646,6 +646,7 @@ public class Main {
         return count == 1;
     }
 
+    // DFS
     //    695. Max Area of Island
     //    https://leetcode.com/problems/max-area-of-island/description/
     public int maxAreaOfIsland(int[][] grid) {
@@ -753,7 +754,6 @@ public class Main {
 
     private void solveDFS(char[][] board, boolean[][] visited, int i, int j, int rows, int columns) {
         if (i < 0 || i >= rows || j < 0 || j >= columns || visited[i][j] || board[i][j] == 'X') {
-            return;
         } else {
             visited[i][j] = true;
             solveDFS(board, visited, i - 1, j, rows, columns);
@@ -836,7 +836,7 @@ public class Main {
                 }
             }
         }
-        return (List) stringList;
+        return new ArrayList<>(stringList);
     }
 
     //    93. Restore IP Addresses
@@ -1252,14 +1252,13 @@ public class Main {
             result.add(singleSolution);
         }
         if (queenCount < n) {
-            int i = queenCount;
             for (int j = 0; j < n; j++) {
-                if (occupied[i][j] == 0) {
-                    board[i][j] = 'Q';
-                    solveNQueensModifyOccupied(occupied, i, j, n, 1);
+                if (occupied[queenCount][j] == 0) {
+                    board[queenCount][j] = 'Q';
+                    solveNQueensModifyOccupied(occupied, queenCount, j, n, 1);
                     solveNQueensBacktracing(n, queenCount + 1, result, board, occupied);
-                    board[i][j] = '.';
-                    solveNQueensModifyOccupied(occupied, i, j, n, -1);
+                    board[queenCount][j] = '.';
+                    solveNQueensModifyOccupied(occupied, queenCount, j, n, -1);
                 }
             }
         }
@@ -1455,11 +1454,7 @@ public class Main {
             return false;
         }
         int i = Integer.valueOf(s);
-        if (i > 0 && i <= 26) {
-            return true;
-        } else {
-            return false;
-        }
+        return i > 0 && i <= 26;
     }
 
     //    300. Longest Increasing Subsequence
@@ -1587,11 +1582,11 @@ public class Main {
 
     private void justifyLine(List<String> result, String[] words, int maxWidth, int start, int end, int currentLen, boolean lastLine) {
         if (lastLine) {
-            String s = String.join(" ", Arrays.copyOfRange(words, start, end));
+            StringBuilder s = new StringBuilder(String.join(" ", Arrays.copyOfRange(words, start, end)));
             while (s.length() < maxWidth) {
-                s += " ";
+                s.append(" ");
             }
-            result.add(s);
+            result.add(s.toString());
         } else {
             int extraSpace = maxWidth - currentLen;
             int index = start;
@@ -1669,19 +1664,19 @@ public class Main {
         int target = sum / 2;
         Set<Integer> subsetSums = new HashSet<>();
         subsetSums.add(0);
-        for (int i = 0; i < nums.length; i++) {
-            Set<Integer> curretSet = new HashSet<>(subsetSums);
-            for (int j : curretSet) {
-                if (j + nums[i] == target) {
+        for (int num : nums) {
+            Set<Integer> currentSet = new HashSet<>(subsetSums);
+            for (int j : currentSet) {
+                if (j + num == target) {
                     return true;
                 }
-                subsetSums.add(j + nums[i]);
+                subsetSums.add(j + num);
             }
         }
         return false;
     }
 
-    public boolean canPartitionBack(int[] nums) {
+    public boolean canPartitionBackpack(int[] nums) {
         int sum = 0;
         for (int i : nums) {
             sum += i;
@@ -1710,7 +1705,7 @@ public class Main {
         return false;
     }
 
-    public boolean canPartitionBack2(int[] nums) {
+    public boolean canPartitionBackpack2(int[] nums) {
         int sum = 0;
         for (int i : nums) {
             sum += i;
@@ -1721,10 +1716,10 @@ public class Main {
         int target = sum / 2;
         boolean[] subsetSum = new boolean[target + 1];
         subsetSum[0] = true;
-        for (int i = 0; i < nums.length; i++) {
+        for (int num : nums) {
             for (int j = target; j > 0; j--) {
-                if (nums[i] <= j) {
-                    subsetSum[j] = subsetSum[j - nums[i]];
+                if (num <= j) {
+                    subsetSum[j] = subsetSum[j - num];
                 }
                 if (j == target && subsetSum[j]) {
                     return true;
@@ -1848,9 +1843,9 @@ public class Main {
     public int maxProfit1(int[] prices) {
         int minPrice = Integer.MAX_VALUE;
         int profit = 0;
-        for (int i = 0; i < prices.length; i++) {
-            minPrice = Math.min(minPrice, prices[i]);
-            profit = Math.max(profit, prices[i] - minPrice);
+        for (int price : prices) {
+            minPrice = Math.min(minPrice, price);
+            profit = Math.max(profit, price - minPrice);
         }
         return profit;
     }
@@ -2260,6 +2255,7 @@ public class Main {
             }
         }
         return Math.max(max3.poll() * max3.poll() * max3.peek(), min2.poll() * min2.poll() * max3.peek());
+
     }
 
 
@@ -2520,7 +2516,7 @@ public class Main {
     //    https://leetcode.com/problems/invert-binary-tree/
     public TreeNode invertTree(TreeNode root) {
         if (root == null) {
-            return root;
+            return null;
         }
         TreeNode temp = root.left;
         root.left = root.right;
@@ -2707,7 +2703,7 @@ public class Main {
     //    671. Second Minimum Node In a Binary Tree
     //    https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/description/
     public int findSecondMinimumValue(TreeNode root) {
-        Set<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new HashSet<>();
         findSecondMinimumValueDFS(root, set);
         int result = Integer.MAX_VALUE;
         for (int v : set) {
@@ -2763,8 +2759,7 @@ public class Main {
         Queue<TreeNode> last = new ArrayDeque<>();
         queue.offer(root);
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            int count = size;
+            int count = queue.size();
             last = new ArrayDeque<>();
             while (count-- > 0) {
                 TreeNode node = queue.poll();
@@ -3032,8 +3027,240 @@ public class Main {
         }
     }
 
+    //    208. Implement Trie (Prefix Tree)
+    //    https://leetcode.com/problems/implement-trie-prefix-tree
+
+    static class Trie {
+
+        private class TrieNode {
+            Map<Character, TrieNode> childs = new HashMap<>();
+            private boolean isWord;
+        }
+
+        private TrieNode root;
 
 
+        /** Initialize your data structure here. */
+        public Trie() {
+            this.root = new TrieNode();
+        }
+
+        /** Inserts a word into the trie. */
+        public void insert(String word) {
+            if (word != null && word.length() > 0) {
+                TrieNode current = root;
+                for (int i = 0; i < word.length(); i++) {
+                    current.childs.put(word.charAt(i), current.childs.getOrDefault(word.charAt(i), new TrieNode()));
+                    current = current.childs.get(word.charAt(i));
+                }
+                current.isWord = true;
+            }
+        }
+
+        /** Returns if the word is in the trie. */
+        public boolean search(String word) {
+            TrieNode node = root;
+            for (int i = 0; i < word.length(); i++) {
+                if (node.childs.get(word.charAt(i)) == null) {
+                    return false;
+                }
+                node = node.childs.get(word.charAt(i));
+            }
+            return node.isWord;
+        }
+
+        /** Returns if there is any word in the trie that starts with the given prefix. */
+        public boolean startsWith(String prefix) {
+            TrieNode node = root;
+            for (int i = 0; i < prefix.length(); i++) {
+                if (node.childs.get(prefix.charAt(i)) == null) {
+                    return false;
+                }
+                node = node.childs.get(prefix.charAt(i));
+            }
+            return startsWithNode(node);
+        }
+
+        private boolean startsWithNode(TrieNode node) {
+            if (node == null) {
+                return false;
+            }
+            if (node.isWord) {
+                return true;
+            }
+            for (TrieNode child : node.childs.values()) {
+                if (startsWithNode(child)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    //    677. Map Sum Pairs
+    //    https://leetcode.com/problems/map-sum-pairs/description/
+    static class MapSum {
+
+        private class MapSumNode {
+            Map<Character, MapSumNode> childs = new HashMap<>();
+            int value = 0;
+        }
+
+        private MapSumNode root;
+
+        /** Initialize your data structure here. */
+        public MapSum() {
+            this.root = new MapSumNode();
+        }
+
+        public void insert(String key, int val) {
+            if (key != null && key.length() > 0) {
+                MapSumNode node = root;
+                for (int i = 0; i < key.length(); i++) {
+                    node.childs.put(key.charAt(i), node.childs.getOrDefault(key.charAt(i), new MapSumNode()));
+                    node = node.childs.get(key.charAt(i));
+                }
+                node.value = val;
+            }
+        }
+
+        public int sum(String prefix) {
+            if (prefix != null && prefix.length() > 0) {
+                MapSumNode node = root;
+                for (int i = 0; i < prefix.length(); i++) {
+                    node = node.childs.get(prefix.charAt(i));
+                    if (node == null) {
+                        return 0;
+                    }
+                }
+                return sumWithRoot(node);
+            }
+            return 0;
+        }
+
+        private int sumWithRoot(MapSumNode node) {
+            int result = 0;
+            for (MapSumNode child : node.childs.values()) {
+                result += sumWithRoot(child);
+            }
+            result += node.value;
+            return result;
+        }
+    }
+
+    //    232. Implement Queue using Stacks
+    //    https://leetcode.com/problems/implement-queue-using-stacks/description/
+    class MyQueue {
+        Deque<Integer> stack1 = new ArrayDeque<>();
+        Deque<Integer> stack2 = new ArrayDeque<>();
+
+        /** Initialize your data structure here. */
+        public MyQueue() {
+        }
+
+        /** Push element x to the back of queue. */
+        public void push(int x) {
+            stack1.push(x);
+        }
+
+        /** Removes the element from in front of queue and returns that element. */
+        public int pop() {
+            if (stack2.isEmpty()) {
+                transfer();
+            }
+            return stack2.pop();
+        }
+
+        /** Get the front element. */
+        public int peek() {
+            if (stack2.isEmpty()) {
+                transfer();
+            }
+            return stack2.peek();
+        }
+
+        /** Returns whether the queue is empty. */
+        public boolean empty() {
+            return stack1.isEmpty() && stack2.isEmpty();
+        }
+
+        private void transfer() {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+    }
+
+    //    225. Implement Stack using Queues
+    //    https://leetcode.com/problems/implement-stack-using-queues/description/
+    class MyStack {
+        Queue<Integer> stack = new ArrayDeque<>();
+        /** Initialize your data structure here. */
+        public MyStack() {
+        }
+
+        /** Push element x onto stack. */
+        public void push(int x) {
+            Queue<Integer> temp = new ArrayDeque<>();
+            while (!stack.isEmpty()) {
+                temp.offer(stack.poll());
+            }
+            stack.offer(x);
+            while (!temp.isEmpty()) {
+                stack.offer(temp.poll());
+            }
+        }
+
+        /** Removes the element on top of the stack and returns that element. */
+        public int pop() {
+            return stack.poll();
+        }
+
+        /** Get the top element. */
+        public int top() {
+            return stack.peek();
+        }
+
+        /** Returns whether the stack is empty. */
+        public boolean empty() {
+            return stack.isEmpty();
+        }
+    }
+
+    //    155. Min Stack
+    //    https://leetcode.com/problems/min-stack/description/
+    static class MinStack {
+        Deque<Integer> dataStack = new ArrayDeque<>();
+        Deque<Integer> minStack = new ArrayDeque<>();
+
+        /** initialize your data structure here. */
+        public MinStack() {
+        }
+
+        public void push(int x) {
+            dataStack.push(x);
+            if (minStack.isEmpty()) {
+                minStack.push(x);
+            } else if (minStack.peek() > x) {
+                minStack.push(x);
+            } else {
+                minStack.push(minStack.peek());
+            }
+        }
+
+        public void pop() {
+            dataStack.pop();
+            minStack.pop();
+        }
+
+        public int top() {
+            return dataStack.peek();
+        }
+
+        public int getMin() {
+            return minStack.peek();
+        }
+    }
 
     //     20. Valid Parentheses
     //     https://leetcode.com/problems/valid-parentheses/description/
@@ -3053,17 +3280,16 @@ public class Main {
         if (a == null || b == null) {
             return false;
         }
-        if (a == '(' && b == ')'
+        return a == '(' && b == ')'
                 || a == ')' && b == '('
                 || a == '[' && b == ']'
                 || a == ']' && b == '['
                 || a == '{' && b == '}'
-                || a == '}' && b == '{') {
-            return true;
-        }
-        return false;
+                || a == '}' && b == '{';
     }
 
+    //    739. Daily Temperatures
+    //    https://leetcode.com/problems/daily-temperatures/description/
     public int[] dailyTemperatures(int[] temperatures) {
         int[] result = new int[temperatures.length];
         Deque<Integer> indexStack = new ArrayDeque<>();
@@ -3077,6 +3303,28 @@ public class Main {
         return result;
     }
 
+    //    503. Next Greater Element II
+    //    https://leetcode.com/problems/next-greater-element-ii/description/
+    public int[] nextGreaterElements(int[] nums) {
+        int[] result = new int[nums.length];
+        Arrays.fill(result, -1);
+        Deque<Integer> indexStack = new ArrayDeque<>();
+        for (int i = 0; i < nums.length; i++) {
+            while (!indexStack.isEmpty() && nums[i] > nums[indexStack.peek()]) {
+                result[indexStack.pop()] = nums[i];
+            }
+            indexStack.push(i);
+        }
+        for (int num : nums) {
+            while (!indexStack.isEmpty() && num > nums[indexStack.peek()]) {
+                result[indexStack.pop()] = num;
+            }
+        }
+        return result;
+    }
+
+
+
     //    hash table
     //    1. Two Sum
     //    https://leetcode.com/problems/two-sum/description/
@@ -3089,6 +3337,20 @@ public class Main {
             map.put(nums[i], i);
         }
         return null;
+    }
+
+    //    217. Contains Duplicate
+    //    https://leetcode.com/problems/contains-duplicate/description/
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int i : nums) {
+            if (set.contains(i)) {
+                return true;
+            } else {
+                set.add(i);
+            }
+        }
+        return false;
     }
 
     //    594. Longest Harmonious Subsequence
@@ -3235,7 +3497,7 @@ public class Main {
         return count;
     }
 
-    //    arrays
+    //    array and matrix
     //    283. Move Zeroes
     //    https://leetcode.com/problems/move-zeroes/description/
     public void moveZeroes(int[] nums) {
@@ -3302,6 +3564,197 @@ public class Main {
             }
         }
         return false;
+    }
+
+    //    378. Kth Smallest Element in a Sorted Matrix
+    //    https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/description/
+    public int kthSmallest(int[][] matrix, int k) {
+        class Node {
+            int value;
+            int i;
+            int j;
+
+            Node(int value, int i, int j) {
+                this.value = value;
+                this.i = i;
+                this.j = j;
+            }
+        }
+
+        PriorityQueue<Node> minHeap = new PriorityQueue<>((o1, o2) -> o1.value - o2.value);
+        for (int j = 0; j < matrix[0].length; j++) {
+            minHeap.add(new Node(matrix[0][j], 0, j));
+        }
+        while (k-- > 1) {
+            Node node = minHeap.poll();
+            if (node.i == matrix.length - 1) {
+                continue;
+            }
+            minHeap.offer(new Node(matrix[node.i + 1][node.j], node.i + 1, node.j));
+        }
+        return minHeap.poll().value;
+    }
+
+    //    645. Set Mismatch
+    //    https://leetcode.com/problems/set-mismatch
+    public int[] findErrorNums(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] != i + 1 && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return new int[]{nums[i], i + 1};
+            }
+        }
+        return null;
+    }
+
+    //    448. Find All Numbers Disappeared in an Array
+    //    https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/description/
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] != i + 1 && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                result.add(i + 1);
+            }
+        }
+        return result;
+    }
+
+    //    442. Find All Duplicates in an Array
+    //    https://leetcode.com/problems/find-all-duplicates-in-an-array/description/
+    public List<Integer> findDuplicates(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] != i + 1 && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                result.add(nums[i]);
+            }
+        }
+        return result;
+    }
+
+
+    //    287. Find the Duplicate Number
+    //    https://leetcode.com/problems/find-the-duplicate-number/description/
+    public int findDuplicate(int[] nums) {
+        int l = 1, h = nums.length - 1;
+        while (l <= h) {
+            int mid = l + (h - l) / 2;
+            int cnt = 0;
+            for (int num : nums) {
+                if (num <= mid) cnt++;
+            }
+            if (cnt > mid) h = mid - 1;
+            else l = mid + 1;
+        }
+        return l;
+    }
+
+    //    667. Beautiful Arrangement II
+    //    https://leetcode.com/problems/beautiful-arrangement-ii/description/
+    public int[] constructArray(int n, int k) {
+        int[] ret = new int[n];
+        ret[0] = 1;
+        for (int i = 1, interval = k; i <= k; i++, interval--) {
+            ret[i] = i % 2 == 1 ? ret[i - 1] + interval : ret[i - 1] - interval;
+        }
+        for (int i = k + 1; i < n; i++) {
+            ret[i] = i + 1;
+        }
+        return ret;
+    }
+
+    //    697. Degree of an Array
+    //    https://leetcode.com/problems/degree-of-an-array/description/
+    public int findShortestSubArray(int[] nums) {
+        class Record {
+            int value;
+            int firstIndex;
+            int lastIndex;
+            int count;
+
+            public Record(int value, int firstIndex, int lastIndex, int count) {
+                this.value = value;
+                this.firstIndex = firstIndex;
+                this.lastIndex = lastIndex;
+                this.count = count;
+            }
+        }
+
+        Map<Integer, Record> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!map.containsKey(nums[i])) {
+                map.put(nums[i], new Record(nums[i], i, i, 1));
+            } else {
+                Record record = map.get(nums[i]);
+                record.lastIndex = i;
+                record.count++;
+            }
+        }
+        List<Record> list = new ArrayList<>(map.values());
+        list.sort((o1, o2) -> {
+            if (o2.count - o1.count != 0) {
+                return o2.count - o1.count;
+            } else {
+                return (o1.lastIndex - o1.firstIndex) - (o2.lastIndex - o2.firstIndex);
+            }
+        });
+        return list.get(0).lastIndex - list.get(0).firstIndex + 1;
+    }
+
+    //    766. Toeplitz Matrix
+    //    https://leetcode.com/problems/toeplitz-matrix/description/
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (i > 0 && j > 0 && matrix[i][j] != matrix[i - 1][j - 1]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //    565. Array Nesting
+    //    https://leetcode.com/problems/array-nesting/description/
+    public int arrayNesting(int[] nums) {
+        int max = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int size = 0;
+            while (i >= 0 && nums[i] >= 0) {
+                size++;
+                int iValue = nums[i];
+                nums[i] = -1;
+                i = iValue;
+            }
+            max = Math.max(max, size);
+        }
+        return max;
+    }
+
+    //    769. Max Chunks To Make Sorted
+    //    https://leetcode.com/problems/max-chunks-to-make-sorted/description/
+    public int maxChunksToSorted(int[] arr) {
+        if (arr == null) return 0;
+        int ret = 0;
+        int right = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            right = Math.max(right, arr[i]);
+            if (right == i) ret++;
+        }
+        return ret;
     }
 
     //    785. Is Graph Bipartite?
@@ -3376,12 +3829,12 @@ public class Main {
     //    210. Course Schedule II
     //    https://leetcode.com/problems/course-schedule-ii/description/
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<Integer>[] graphic = new List[numCourses];
+        List<List<Integer>> graphic = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
-            graphic[i] = new ArrayList<>();
+            graphic.add(new ArrayList<>());
         }
         for (int[] pre : prerequisites) {
-            graphic[pre[0]].add(pre[1]);
+            graphic.get(pre[0]).add(pre[1]);
         }
         Stack<Integer> postOrder = new Stack<>();
         boolean[] globalMarked = new boolean[numCourses];
@@ -3398,7 +3851,7 @@ public class Main {
         return orders;
     }
 
-    private boolean hasCycle(boolean[] globalMarked, boolean[] localMarked, List<Integer>[] graphic,
+    private boolean hasCycle(boolean[] globalMarked, boolean[] localMarked, List<List<Integer>> graphic,
                              int curNode, Stack<Integer> postOrder) {
 
         if (localMarked[curNode]) {
@@ -3409,7 +3862,7 @@ public class Main {
         }
         globalMarked[curNode] = true;
         localMarked[curNode] = true;
-        for (int nextNode : graphic[curNode]) {
+        for (int nextNode : graphic.get(curNode)) {
             if (hasCycle(globalMarked, localMarked, graphic, nextNode, postOrder)) {
                 return true;
             }
@@ -3419,8 +3872,131 @@ public class Main {
         return false;
     }
 
+    //    148. Sort List
+    //    https://leetcode.com/problems/sort-list
+    public ListNode sortList(ListNode head) {
+        int listLength = 0;
+        ListNode node = head;
+        while (node != null) {
+            listLength++;
+            node = node.next;
+        }
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        for (int i = 1; i < listLength; i *= 2) {
+            mergeBySize(dummy, i);
+        }
+        return dummy.next;
+    }
 
+    private void mergeBySize(ListNode dummy, int i) {
+        ListNode pre = dummy;
+        while (pre != null && pre.next != null) {
+            ListNode[] headAndTail = mergeTwoSubList(pre.next, i);
+            pre.next = headAndTail[0];
+            pre = headAndTail[1];
+        }
+    }
+
+    private ListNode[] mergeTwoSubList(ListNode head, int i) {
+        ListNode head1 = head;
+        ListNode tail1 = getTail(head, i);
+        if (tail1 != null && tail1.next != null) {
+            ListNode head2 = tail1.next;
+            tail1.next = null;
+            ListNode tail2 = getTail(head2, i);
+            ListNode rest = tail2.next;
+            tail2.next = null;
+            ListNode dummy = new ListNode(0);
+            ListNode node = dummy;
+            while (head1 != null && head2 != null) {
+                if (head1.val < head2.val) {
+                    node.next = head1;
+                    node = node.next;
+                    head1 = head1.next;
+                } else {
+                    node.next = head2;
+                    node = node.next;
+                    head2 = head2.next;
+                }
+            }
+            if (head1 != null) {
+                node.next = head1;
+            }
+            if (head2 != null) {
+                node.next = head2;
+            }
+            tail2 = getTail(dummy, i * 2 + 1);
+            tail2.next = rest;
+            return new ListNode[]{dummy.next, tail2};
+        } else {
+            return new ListNode[]{head1, tail1};
+        }
+    }
+
+    private ListNode getTail(ListNode head, int length) {
+        while (head.next != null && length > 1) {
+            head = head.next;
+            length--;
+        }
+        return head;
+    }
+
+    public ListNode sortListRecursive(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode pre = null;
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            pre = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        pre.next = null;
+        head = sortListRecursive(head);
+        slow = sortListRecursive(slow);
+        head = sortListRecursiveMerge(head, slow);
+        return head;
+    }
+
+    private ListNode sortListRecursiveMerge(ListNode head1, ListNode head2) {
+        ListNode dummy = new ListNode(0);
+        ListNode node = dummy;
+        while (head1 != null && head2 != null) {
+            if (head1.val < head2.val) {
+                node.next = head1;
+                head1 = head1.next;
+            } else {
+                node.next = head2;
+                head2 = head2.next;
+            }
+            node = node.next;
+
+        }
+        if (head1 != null) {
+            node.next = head1;
+        }
+        if (head2 != null) {
+            node.next = head2;
+        }
+        return dummy.next;
+    }
+
+    //    684. Redundant Connection
+    //    https://leetcode.com/problems/redundant-connection/description/
+    public int[] findRedundantConnection(int[][] edges) {
+        DSU dsu = new DSU(edges.length + 1);
+        for (int[] edge: edges) {
+            if (!dsu.union(edge[0], edge[1])) return edge;
+        }
+        return null;
+    }
 }
+
+
+
 
 
 

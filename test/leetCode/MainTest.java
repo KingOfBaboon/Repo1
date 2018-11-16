@@ -1,6 +1,9 @@
+package leetCode;
+
+import dataStructure.ListNode;
+import dataStructure.TreeNode;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.NodeList;
 
 import java.util.*;
 
@@ -126,6 +129,8 @@ public class MainTest {
 
     @Test
     public void reconstructQueue() {
+        int[][] a = new int[][]{{7,0}, {4,4}, {7,1}, {5,0}, {6,1}, {5,2}};
+        main.reconstructQueue(a);
     }
 
     @Test
@@ -500,7 +505,7 @@ public class MainTest {
 
     @Test
     public void canPartitionBack() {
-        boolean b = main.canPartitionBack(new int[]{1, 2, 5});
+        boolean b = main.canPartitionBackpack(new int[]{1, 2, 5});
         System.out.println(b);
     }
 
@@ -520,9 +525,6 @@ public class MainTest {
 
     @Test
     public void wordBreak() {
-        String s = "12";
-        s = s.substring(2);
-
         main.wordBreak("catsandog", Arrays.asList("cats", "dog", "sand", "and", "cat"));
     }
 
@@ -594,7 +596,6 @@ public class MainTest {
 
     @Test
     public void convertToBase7() {
-        int i = 5;
         char a = (char) 45345345;
         System.out.println(a);
         System.out.println(main.convertToBase7(100));
@@ -696,9 +697,6 @@ public class MainTest {
 
     @Test
     public void oddEvenList() {
-        List<NodeList> a = new ArrayList<>();
-        a.add(null);
-        System.out.println(a.size());
     }
 
     @Test
@@ -791,9 +789,6 @@ public class MainTest {
 
     @Test
     public void sortedArrayToBST() {
-        Integer aa = null;
-        int bb = 5;
-        System.out.println(aa == bb);
     }
 
     @Test
@@ -813,4 +808,139 @@ public class MainTest {
         TreeNode a = new TreeNode(Arrays.asList(1, null, 2, 2));
         main.findMode(a);
     }
+
+    @Test
+    public void trie() {
+        Main.Trie trie = new Main.Trie();
+        trie.insert("apple");
+        trie.search("apple");   // returns true
+        trie.search("app");     // returns false
+        trie.startsWith("app"); // returns true
+        trie.insert("app");
+        trie.search("app");     // returns true
+    }
+
+    @Test
+    public void mapSum() {
+        Main.MapSum mapSum = new Main.MapSum();
+        mapSum.insert("apple", 3);
+        mapSum.sum("ap");
+    }
+
+    @Test
+    public void minStack() {
+        Main.MinStack minStack = new Main.MinStack();
+        minStack.push(2);
+        minStack.push(0);
+        minStack.push(3);
+        minStack.push(0);
+        minStack.getMin();
+        minStack.pop();
+        minStack.getMin();
+        minStack.pop();
+        minStack.getMin();
+        minStack.pop();
+        minStack.getMin();
+    }
+
+    @Test
+    public void nextGreaterElements() {
+    }
+
+    @Test
+    public void containsDuplicate() {
+    }
+
+    @Test
+    public void kthSmallestMatrix() {
+        int[][] a = new int[5][5];
+        a[0] = new int[]{1, 4, 7, 11, 15};
+        a[1] = new int[]{2, 5, 8, 12, 19};
+        a[2] = new int[]{3, 6, 9, 16, 22};
+        a[3] = new int[]{10, 13, 14, 17, 24};
+        a[4] = new int[]{18, 21, 23, 26, 30};
+        main.kthSmallest(a, 5);
+    }
+
+    @Test
+    public void findDuplicate() {
+        main.findDuplicate(new int[]{3, 1, 3, 4, 2});
+    }
+
+    @Test
+    public void findErrorNums() {
+        main.findErrorNums(new int[]{4,2,4,3,1,6,8,5});
+    }
+
+    @Test
+    public void findDisappearedNumbers() {
+    }
+
+    @Test
+    public void findDuplicates() {
+    }
+
+    @Test
+    public void constructArray() {
+        main.constructArray(10, 2);
+        main.constructArray(10, 3);
+        main.constructArray(10, 6);
+    }
+
+    @Test
+    public void findShortestSubArray() {
+        main.findShortestSubArray(new int[]{2, 1, 1, 2, 1, 3, 3, 3, 1, 3, 1, 3, 2});
+    }
+
+    @Test
+    public void isToeplitzMatrix() {
+    }
+
+    @Test
+    public void arrayNesting() {
+        int a = main.arrayNesting(new int[]{5, 4, 0, 3, 1, 6, 2});
+        System.out.println(a);
+    }
+
+    @Test
+    public void maxChunksToSorted() {
+        main.maxChunksToSorted(new int[]{4, 1, 0, 2, 3, 5, 6});
+    }
+
+
+    @Test
+    public void canPartitionBackpack() {
+    }
+
+    @Test
+    public void canPartitionBackpack2() {
+    }
+
+    @Test
+    public void sortList() {
+        ListNode a = new ListNode(new int[]{5, 4, 6, 9, 1});
+        a = main.sortList(a);
+        a.printListNodes();
+    }
+
+    @Test
+    public void sortListRecursive() {
+        ListNode a = new ListNode(new int[]{5, 4, 6, 9, 1});
+        main.sortListRecursive(a);
+    }
+
+    @Test
+    public void findRedundantConnection() {
+        System.out.println("shit".hashCode());
+        System.out.println("shit".hashCode());
+        String s = "shit";
+        System.out.println(s.hashCode());
+        main.findRedundantConnection(new int[][]{{1, 2}, {2, 3}, {3, 4}, {1, 4}, {1, 5}});
+    }
+
+    @Test
+    public void test() {
+    }
 }
+
+

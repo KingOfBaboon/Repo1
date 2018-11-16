@@ -1,44 +1,39 @@
-import java.util.List;
+package dataStructure;
 
 public class ListNode {
-    int val;
-    ListNode next;
+    public int val;
+    public ListNode next;
 
-    ListNode(int x) {
+    public ListNode(int x) {
         val = x;
         next = null;
     }
 
-    ListNode(ListNode next) {
-        this.next = next;
-    }
-
-    ListNode(int x, ListNode next) {
+    public ListNode(int x, ListNode next) {
         val = x;
         this.next = next;
     }
 
-    ListNode(int[] array) {
+    public ListNode(int[] array) {
         ListNode dummy = new ListNode(array[0]);
         ListNode node = dummy;
         for (int i : array) {
-            ListNode newNode = new ListNode(i);
-            node.next = newNode;
+            node.next = new ListNode(i);
             node = node.next;
         }
         this.val = dummy.next.val;
         this.next = dummy.next.next;
     }
 
-    public void printListNodes() {
+    public String printListNodes() {
         ListNode node = this;
         StringBuilder stringBuilder = new StringBuilder();
         while (node != null) {
-            stringBuilder.append(node.val + "->");
+            stringBuilder.append(node.val).append("->");
             node = node.next;
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
-        System.out.println(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
 }
