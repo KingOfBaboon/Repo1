@@ -1,9 +1,7 @@
 package leetCode;
 
 
-import dataStructure.DSU;
-import dataStructure.ListNode;
-import dataStructure.TreeNode;
+import dataStructure.*;
 
 import java.util.*;
 
@@ -302,7 +300,7 @@ public class Main {
 
     //    435. Non-overlapping Intervals
     //    https://leetcode.com/problems/non-overlapping-intervals/description/
-    public class Interval {
+    public static class Interval {
         int start;
         int end;
 
@@ -3789,87 +3787,166 @@ public class Main {
 
     //    207. Course Schedule
     //    https://leetcode.com/problems/course-schedule/description/
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+    // 207.1 dfs grey color
+    public boolean canFinishDFS(int numCourses, int[][] prerequisites) {
         List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
             graph.add(new ArrayList<>());
         }
-        for (int[] prerequisity : prerequisites) {
-            int from = prerequisity[0];
-            int to = prerequisity[1];
-            graph.get(from).add(to);
+        for (int[] edge : prerequisites) {
+            graph.get(edge[0]).add(edge[1]);
         }
-        boolean[] permanentMarked = new boolean[graph.size()];
-        boolean[] temperaryMarked = new boolean[graph.size()];
+        int[] visited = new int[numCourses];
         for (int i = 0; i < numCourses; i++) {
-            if (hasCircle(i, graph, permanentMarked, temperaryMarked)) {
+            if (dfsHaveCircle(i, graph, visited)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean hasCircle(int node, List<List<Integer>> graph, boolean[] permanentMarked, boolean[] temperaryMarked) {
-        if (!permanentMarked[node]) {
-            if (temperaryMarked[node]) {
+    private boolean dfsHaveCircle(int i, List<List<Integer>> graph, int[] visited) {
+        if (visited[i] == 2) {
+            return false;
+        }
+        if (visited[i] == 1) {
+            return true;
+        }
+        visited[i] = 1;
+        for (int child : graph.get(i)) {
+            if (dfsHaveCircle(child, graph, visited)) {
                 return true;
-            } else {
-                temperaryMarked[node] = true;
             }
-            for (int connectedNode : graph.get(node)) {
-                if (hasCircle(connectedNode, graph, permanentMarked, temperaryMarked)) {
-                    return true;
+        }
+        visited[i] = 2;
+        return false;
+    }
+
+    // bfs grep color : can't use bfs grey color to detect circle in dag
+
+    // 207.2 we can use kahn's algorithm(topologic sort)
+    public boolean canFinishKahn(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            graph.get(edge[0]).add(edge[1]);
+        }
+        return !kahnHaveCircle(graph);
+    }
+
+    private boolean kahnHaveCircle(List<List<Integer>> graph) {
+        int[] indegree = new int[graph.size()];
+        for (List<Integer> list : graph) {
+            for (int node : list) {
+                indegree[node]++;
+            }
+        }
+        Queue<Integer> zeroIndegreeNodes = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                zeroIndegreeNodes.add(i);
+            }
+        }
+        int removedCount = 0;
+        while (!zeroIndegreeNodes.isEmpty()) {
+            int removed = zeroIndegreeNodes.poll();
+            removedCount++;
+            for (int child : graph.get(removed)) {
+                indegree[child]--;
+                if (indegree[child] == 0) {
+                    zeroIndegreeNodes.add(child);
                 }
             }
-            permanentMarked[node] = true;
         }
-        return false;
+        return removedCount != graph.size();
     }
 
     //    210. Course Schedule II
     //    https://leetcode.com/problems/course-schedule-ii/description/
+
+    // 210.1 dfs grey color stack
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        List<List<Integer>> graphic = new ArrayList<>();
+        List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i < numCourses; i++) {
-            graphic.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
         }
-        for (int[] pre : prerequisites) {
-            graphic.get(pre[0]).add(pre[1]);
+        for (int[] edge : prerequisites) {
+            graph.get(edge[0]).add(edge[1]);
         }
-        Stack<Integer> postOrder = new Stack<>();
-        boolean[] globalMarked = new boolean[numCourses];
-        boolean[] localMarked = new boolean[numCourses];
+        int[] visited = new int[numCourses];
+        List<Integer> postOrder = new ArrayList<>();
+
         for (int i = 0; i < numCourses; i++) {
-            if (hasCycle(globalMarked, localMarked, graphic, i, postOrder)) {
+            if (dfsFindOrderHasCircle(i, graph, visited, postOrder)) {
                 return new int[0];
             }
         }
-        int[] orders = new int[numCourses];
-        for (int i = numCourses - 1; i >= 0; i--) {
-            orders[i] = postOrder.pop();
+        int[] result = new int[numCourses];
+        int index = 0;
+        while (!postOrder.isEmpty()) {
+            result[index++] = postOrder.remove(0);
         }
-        return orders;
+        return result;
     }
 
-    private boolean hasCycle(boolean[] globalMarked, boolean[] localMarked, List<List<Integer>> graphic,
-                             int curNode, Stack<Integer> postOrder) {
-
-        if (localMarked[curNode]) {
-            return true;
-        }
-        if (globalMarked[curNode]) {
+    private boolean dfsFindOrderHasCircle(int i, List<List<Integer>> graph, int[] visited, List<Integer> postOrder) {
+        if (visited[i] == 2) {
             return false;
         }
-        globalMarked[curNode] = true;
-        localMarked[curNode] = true;
-        for (int nextNode : graphic.get(curNode)) {
-            if (hasCycle(globalMarked, localMarked, graphic, nextNode, postOrder)) {
+        if (visited[i] == 1) {
+            return true;
+        }
+        visited[i] = 1;
+        for (int child : graph.get(i)) {
+            if (dfsFindOrderHasCircle(child, graph, visited, postOrder)) {
                 return true;
             }
         }
-        localMarked[curNode] = false;
-        postOrder.push(curNode);
+        visited[i] = 2;
+        postOrder.add(i);
         return false;
+    }
+
+
+    // 210.2 kahn's algorithm
+    public int[] findOrderKahn(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : prerequisites) {
+            graph.get(edge[0]).add(edge[1]);
+        }
+        int[] indegree = new int[numCourses];
+        for (int[] edge : prerequisites) {
+            indegree[edge[1]]++;
+        }
+        Queue<Integer> zeroIndegree = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                zeroIndegree.add(i);
+            }
+        }
+        int[] result = new int[numCourses];
+        int index = numCourses - 1;
+        while (!zeroIndegree.isEmpty()) {
+            int current = zeroIndegree.poll();
+            result[index--] = current;
+            for (int child : graph.get(current)) {
+                indegree[child]--;
+                if (indegree[child] == 0) {
+                    zeroIndegree.add(child);
+                }
+            }
+        }
+        if (index == -1) {
+            return result;
+        } else {
+            return new int[0];
+        }
     }
 
     //    148. Sort List
@@ -3993,6 +4070,811 @@ public class Main {
         }
         return null;
     }
+
+    //    222. Count Complete Tree Nodes
+    //    https://leetcode.com/problems/count-complete-tree-nodes/
+    public int countNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int height = getTreeHeight(root);
+        if (height == 0) {
+            return 1;
+        }
+        if (getTreeHeight(root.left) == getTreeHeight(root.right)) {
+            int left = (int) Math.pow(2, height) - 1;
+            int right = countNodes(root.right);
+            return  left + right + 1;
+        } else {
+            int left = countNodes(root.left);
+            int right = (int) Math.pow(2, height - 1) - 1;
+            return left + right + 1;
+        }
+    }
+
+    private int getTreeHeight(TreeNode root) {
+        if (root == null) {
+            return -1;
+        }
+        return 1 + getTreeHeight(root.left);
+    }
+
+    public int countNodes2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + countNodes2(root.left) + countNodes2(root.right);
+    }
+
+    // Top 100 Liked Questions
+    // https://leetcode.com/problemset/top-100-liked-questions/
+
+    //    2. Add Two Numbers
+    //    https://leetcode.com/problems/add-two-numbers/
+    public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int value = (l1 == null ? 0 : l1.val) + (l2 == null ? 0 : l2.val) + carry;
+            if (l1 != null) {
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                l2 = l2.next;
+            }
+            current.next = new ListNode(value % 10);
+            current = current.next;
+            carry = value / 10;
+        }
+        return dummy.next;
+    }
+
+    //    3. Longest Substring Without Repeating Characters
+    //    https://leetcode.com/problems/longest-substring-without-repeating-characters/
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int max = 0;
+        int start = 0;
+        int end = 0;
+        Set<Character> set = new HashSet<>();
+        while (start <= end && end < s.length()) {
+            if (!set.contains(s.charAt(end))) {
+                set.add(s.charAt(end));
+                max = Math.max(max, end - start + 1);
+                end++;
+            } else {
+                set.remove(s.charAt(start));
+                start++;
+            }
+        }
+        return max;
+    }
+    //    10. Regular Expression Matching
+    //    https://leetcode.com/problems/regular-expression-matching/
+    public boolean isMatch(String text, String pattern) {
+        if (pattern.isEmpty()) {
+            return text.isEmpty();
+        }
+        boolean firstMatch = !text.isEmpty() && (text.charAt(0) == pattern.charAt(0) || pattern.charAt(0) == '.');
+        if (pattern.length() > 1 && pattern.charAt(1) == '*') {
+            return isMatch(text, pattern.substring(2)) || (firstMatch && isMatch(text.substring(1), pattern));
+        } else {
+            return firstMatch && isMatch(text.substring(1), pattern.substring(1));
+        }
+    }
+
+    //    22. Generate Parentheses
+    //    https://leetcode.com/problems/generate-parentheses/
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        generateParenthesisBacktracking(result, "", 0, 0, n);
+        return result;
+    }
+
+    private void generateParenthesisBacktracking(List<String> result, String path, int open, int close, int n) {
+        if (path.length() == n * 2) {
+            result.add(path);
+        } else if (path.length() < n * 2) {
+            if (open < n) {
+                generateParenthesisBacktracking(result, path + "(", open + 1, close, n);
+            }
+            if (open > close) {
+                generateParenthesisBacktracking(result, path + ")", open, close + 1, n);
+            }
+        }
+    }
+
+    //    23. Merge k Sorted Lists
+    //    https://leetcode.com/problems/merge-k-sorted-lists/
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((o1, o2) -> o1.val - o2.val);
+        for (ListNode node : lists) {
+            if (node != null) {
+                minHeap.add(node);
+            }
+        }
+        while (!minHeap.isEmpty()) {
+            ListNode min = minHeap.poll();
+            current.next = min;
+            current = current.next;
+            min = min.next;
+            if (min != null) {
+                minHeap.add(min);
+            }
+        }
+        return dummy.next;
+    }
+
+    //    31. Next Permutation
+    //    https://leetcode.com/problems/next-permutation/
+    public void nextPermutation(int[] nums) {
+        Integer first = null;
+        Integer second = null;
+        int max = Integer.MIN_VALUE;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            max = Math.max(max, nums[i]);
+            if (nums[i] < max) {
+                first = i;
+                break;
+            }
+        }
+        if (first != null) {
+            for (int i = nums.length - 1; i >= 0; i--) {
+                if (nums[i] > nums[first]) {
+                    second = i;
+                    break;
+                }
+            }
+            swap(nums, first, second);
+            reverse(nums, first + 1);
+        } else {
+            reverse(nums, 0);
+        }
+    }
+
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    //    32. Longest Valid Parentheses
+    //    https://leetcode.com/problems/longest-valid-parentheses/
+
+    // n^2
+    public int longestValidParentheses(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        int max = 0;
+        for (int i = 0; i < s.length(); i++) {
+            max = Math.max(max, longestValidParenthesesStartWith(i, s));
+        }
+        return max;
+    }
+
+    private int longestValidParenthesesStartWith(int i, String s) {
+        int open = 0;
+        int close = 0;
+        int max = 0;
+        for (; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                open++;
+            } else {
+                close++;
+            }
+            if (open == close) {
+                max = Math.max(max, open + close);
+            } else if (open < close) {
+                return max;
+            }
+        }
+        return max;
+    }
+
+    // o(n) using stack
+    public int longestValidParenthesesStack(String s) {
+        int max = 0;
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(-1);
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                stack.pop();
+                if (!stack.isEmpty()) {
+                    max = Math.max(max, i - stack.peek());
+                } else {
+                    stack.push(i);
+                }
+            }
+        }
+        return max;
+    }
+
+    //    42. Trapping Rain Water
+    //    https://leetcode.com/problems/trapping-rain-water/
+    public int trap(int[] height) {
+        if (height == null || height.length < 2) {
+            return 0;
+        }
+        int[] lastMax = new int[height.length];
+        int[] nextMax = new int[height.length];
+        for (int i = 0; i < height.length; i++) {
+            if (i == 0) {
+                lastMax[i] = height[i];
+            } else {
+                lastMax[i] = Math.max(lastMax[i - 1], height[i]);
+            }
+        }
+        for (int i = height.length - 1; i >= 0; i--) {
+            if (i == height.length - 1) {
+                nextMax[i] = height[i];
+            } else {
+                nextMax[i] = Math.max(nextMax[i + 1], height[i]);
+            }
+        }
+        int result = 0;
+        for (int i = 0; i < height.length; i++) {
+            result += Math.min(lastMax[i], nextMax[i]) - height[i];
+        }
+        return result;
+    }
+
+    //    48. Rotate Image
+    //    https://leetcode.com/problems/rotate-image/
+    public void rotate(int[][] matrix) {
+        int size = matrix.length;
+        boolean[][] visited = new boolean[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                rotate4(matrix, visited, i, j, size);
+            }
+        }
+    }
+
+    private void rotate4(int[][] matrix, boolean[][] visited, int i, int j, int size) {
+        if (!visited[i][j]) {
+            int i1 = i;
+            int j1 = j;
+            int i2 = j1;
+            int j2 = size - i1 - 1;
+            int i3 = j2;
+            int j3 = size - i2 - 1;
+            int i4 = j3;
+            int j4 = size - i3 - 1;
+            int temp = matrix[i1][j1];
+            matrix[i1][j1] = matrix[i4][j4];
+            matrix[i4][j4] = matrix[i3][j3];
+            matrix[i3][j3] = matrix[i2][j2];
+            matrix[i2][j2] = temp;
+            visited[i1][j1] = true;
+            visited[i2][j2] = true;
+            visited[i3][j3] = true;
+            visited[i4][j4] = true;
+        }
+    }
+
+    //    49. Group Anagrams
+    //    https://leetcode.com/problems/group-anagrams/
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String s : strs) {
+
+            char[] charArray = s.toCharArray();
+            Arrays.sort(charArray);
+            String sorted = new String(charArray);
+            if (!map.containsKey(sorted)) {
+                map.put(sorted, new ArrayList<>());
+            }
+            map.get(sorted).add(s);
+        }
+        return new ArrayList<>(map.values());
+    }
+
+    //    8. String to Integer (atoi)
+    //    https://leetcode.com/problems/string-to-integer-atoi/
+    public int myAtoi(String str) {
+        int index = 0, sign = 1;
+        if(str.length() == 0) return 0;
+
+        while(index < str.length() && str.charAt(index) == ' ')
+            index++;
+
+        if(index < str.length() && (str.charAt(index) == '+' || str.charAt(index) == '-')) {
+            sign = str.charAt(index) == '+' ? 1 : -1;
+            index++;
+        }
+
+        if(index < str.length() && !Character.isDigit(str.charAt(index))) return 0;
+
+        int result = 0;
+        while(index < str.length()) {
+            if(!Character.isDigit(str.charAt(index))) break;
+            char current = str.charAt(index++);
+            int previous = result;
+            result *= 10;
+            if(previous != result/10) {
+                return sign == -1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+            result += (current - '0');
+            if(result < 0) {
+                return sign == -1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+        return result * sign;
+    }
+
+    //    41. First Missing Positive
+    //    https://leetcode.com/problems/first-missing-positive/
+    public int firstMissingPositive(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            while (nums[i] > 0 && nums[i] <= nums.length && nums[i] != i + 1 && nums[i] != nums[nums[i] - 1]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+        return nums.length + 1;
+    }
+
+    //    44. Wildcard Matching
+    //    https://leetcode.com/problems/wildcard-matching/
+    public boolean isMatch2(String s, String p) {
+        boolean[][] dp = new boolean[s.length()+1][p.length()+1];
+        dp[0][0] = true;
+        int i = 1;
+        while (i - 1 < p.length() && p.charAt(i - 1) == '*') {
+            dp[0][i] = true;
+            i++;
+        }
+
+        for (int m = 1; m < dp.length; m++) {
+            for (int n = 1; n < dp[0].length; n++) {
+                char str = s.charAt(m - 1);
+                char pattn = p.charAt(n - 1);
+                if (str == pattn || pattn == '?') {
+                    dp[m][n] = dp[m - 1][n - 1];
+                } else if (pattn == '*') {
+                    dp[m][n] = dp[m][n - 1] || dp[m - 1][n];
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
+
+    //    50. Pow(x, n)
+    //    https://leetcode.com/problems/powx-n/
+    public double myPow(double x, int n) {
+        if(n == 0)
+            return 1;
+        if(n<0){
+            n = -n;
+            x = 1/x;
+        }
+        return (n%2 == 0) ? myPow(x*x, n/2) : x*myPow(x*x, n/2);
+    }
+
+    //    54. Spiral Matrix
+    //    https://leetcode.com/problems/spiral-matrix/
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return result;
+        }
+        boolean[][] visited = new boolean[matrix.length][matrix[0].length];
+        int[] direction = new int[]{0, 1};
+        int[] current = new int[]{0, -1};
+        while (true) {
+            if (tryNextStep(current, direction, matrix, visited, result)) {
+            } else {
+                direction = changeDirection(current, matrix, visited);
+                if (direction == null) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int[] changeDirection(int[] current, int[][] matrix, boolean[][] visited) {
+        int[][] directions = new int[][]{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        for (int[] direction : directions) {
+            if (isValidStep(current, direction, matrix, visited)) {
+                return direction;
+            }
+        }
+        return null;
+    }
+
+    private boolean isValidStep(int[] current, int[] direction, int[][] matrix, boolean[][] visited) {
+        int i = current[0] + direction[0];
+        int j = current[1] + direction[1];
+        return i >= 0 && i < matrix.length && j >= 0 && j < matrix[0].length && !visited[i][j];
+    }
+
+    private boolean tryNextStep(int[] current, int[] direction, int[][] matrix, boolean[][] visited, List<Integer> result) {
+        int i = current[0] + direction[0];
+        int j = current[1] + direction[1];
+        if (isValidStep(current, direction, matrix, visited)) {
+            result.add(matrix[i][j]);
+            visited[i][j] = true;
+            current[0] = i;
+            current[1] = j;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //    56. Merge Intervals
+    //    https://leetcode.com/problems/merge-intervals/
+    public List<Interval> mergeIntervals(List<Interval> intervals) {
+        if (intervals == null || intervals.size() == 0) {
+            return new ArrayList<>();
+        }
+        Collections.sort(intervals, (o1, o2) -> o1.start - o2.start);
+        for (int i = 1; i < intervals.size(); i++) {
+            Interval pre = intervals.get(i - 1);
+            Interval current = intervals.get(i);
+            if (isOverlapping(pre, current)) {
+                mergeInterval(pre, current);
+            }
+        }
+        Iterator<Interval> iterator = intervals.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().start == -1) {
+                iterator.remove();
+            }
+        }
+        return intervals;
+    }
+
+    private void mergeInterval(Interval pre, Interval current) {
+        current.start = Math.min(pre.start, current.start);
+        current.end = Math.max(pre.end, current.end);
+        pre.start = -1;
+    }
+
+    private boolean isOverlapping(Interval pre, Interval current) {
+        return !(pre.end < current.start || current.end < pre.start);
+    }
+
+    //    73. Set Matrix Zeroes
+    //    https://leetcode.com/problems/set-matrix-zeroes/
+    public void setZeroes(int[][] matrix) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
+                    setRowAndColumn(matrix, i, j);
+                }
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 5555) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private void setRowAndColumn(int[][] matrix, int i, int j) {
+        for (int k = 0; k < matrix.length; k++) {
+            if (matrix[k][j] != 0) {
+                matrix[k][j] = 5555;
+            }
+        }
+        for (int k = 0; k < matrix[0].length; k++) {
+            if (matrix[i][k] != 0) {
+                matrix[i][k] = 5555;
+            }
+        }
+    }
+
+    //    76. Minimum Window Substring
+    //    https://leetcode.com/problems/minimum-window-substring/
+    public String minWindow(String s, String t) {
+        if (s.length() == 0 || t.length() == 0) {
+            return "";
+        }
+        int start = 0;
+        int end = 0;
+        String minWindows = null;
+        Map<Character, Integer> targetCharCount = new HashMap<>();
+        for (char c : t.toCharArray()) {
+            targetCharCount.put(c, targetCharCount.getOrDefault(c, 0) + 1);
+        }
+        Map<Character, Integer> windowCharCount = new HashMap<>();
+        windowCharCount.put(s.charAt(0), 1);
+        while (start < s.length() && end < s.length()) {
+            if (containsString(targetCharCount, windowCharCount)) {
+                if (minWindows == null || end - start + 1 < minWindows.length()) {
+                    minWindows = s.substring(start, end + 1);
+                }
+                windowCharCount.put(s.charAt(start), windowCharCount.get(s.charAt(start)) - 1);
+                if (windowCharCount.get(s.charAt(start)) == 0) {
+                    windowCharCount.remove(s.charAt(start));
+                }
+                start++;
+            } else {
+                end++;
+                if (end < s.length()) {
+                    windowCharCount.put(s.charAt(end), windowCharCount.getOrDefault(s.charAt(end), 0) + 1);
+                }
+            }
+        }
+        return minWindows == null ? "" : minWindows;
+    }
+
+    private boolean containsString(Map<Character, Integer> targetCharCount, Map<Character, Integer> windowCharCount) {
+        if (targetCharCount.size() > windowCharCount.size()) {
+            return false;
+        }
+        for (Character c : targetCharCount.keySet()) {
+            if (windowCharCount.get(c) == null || windowCharCount.get(c) < targetCharCount.get(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //    84. Largest Rectangle in Histogram
+    //    https://leetcode.com/problems/largest-rectangle-in-histogram/
+    public int largestRectangleArea2(int[] height) {
+        int len = height.length;
+        Stack<Integer> s = new Stack<Integer>();
+        int maxArea = 0;
+        for(int i = 0; i <= len; i++){
+            int h = (i == len ? 0 : height[i]);
+            if(s.isEmpty() || h >= height[s.peek()]){
+                s.push(i);
+            }else{
+                int tp = s.pop();
+                maxArea = Math.max(maxArea, height[tp] * (s.isEmpty() ? i : i - 1 - s.peek()));
+                i--;
+            }
+        }
+        return maxArea;
+    }
+
+    public static int largestRectangleArea(int height[]) {
+        Deque<Integer> s = new ArrayDeque<>();
+        int maxArea = 0;
+        int tp;
+        int i = 0;
+        while (i < height.length) {
+            if (s.isEmpty() || height[s.peek()] <= height[i])
+                s.push(i++);
+            else {
+                tp = s.peek();
+                s.pop();
+                maxArea = Math.max(maxArea, height[tp] * (s.isEmpty() ? i : i - s.peek() - 1));
+            }
+        }
+        while (!s.isEmpty()) {
+            tp = s.peek();
+            s.pop();
+            maxArea = Math.max(maxArea, height[tp] * (s.isEmpty() ? i : i - s.peek() - 1));
+
+        }
+        return maxArea;
+    }
+
+    //    105. Construct Binary Tree from Preorder and Inorder Traversal
+    //    https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder.length == 0) {
+            return null;
+        }
+        if (preorder.length == 1) {
+            return new TreeNode(preorder[0]);
+        }
+        int rootValue = preorder[0];
+        TreeNode root = new TreeNode(rootValue);
+        int inRootIndex = -1;
+        for (int i = 0; i < inorder.length; i++) {
+            if (inorder[i] == rootValue) {
+                inRootIndex = i;
+            }
+        }
+        int leftChildLength = inRootIndex;
+        int rightChildLength = inorder.length - leftChildLength - 1;
+        if (leftChildLength > 0) {
+            root.left = buildTree(Arrays.copyOfRange(preorder, 1, 1 + leftChildLength), Arrays.copyOfRange(inorder, 0, inRootIndex));
+        }
+        if (rightChildLength > 0) {
+            root.right = buildTree(Arrays.copyOfRange(preorder, 1 + leftChildLength, preorder.length), Arrays.copyOfRange(inorder, inRootIndex + 1, inorder.length));
+        }
+        return root;
+    }
+
+    //    116. Populating Next Right Pointers in Each Node
+    //    https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+    public void connect(TreeLinkNode root) {
+        if (root != null) {
+            Queue<TreeLinkNode> queue = new LinkedList<>();
+            queue.add(root);
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                while (size > 0) {
+                    TreeLinkNode out = queue.poll();
+                    if (out.left != null) {
+                        queue.add(out.left);
+                    }
+                    if (out.right != null) {
+                        queue.add(out.right);
+                    }
+                    size--;
+                    if (size == 0) {
+                        out.next = null;
+                    } else {
+                        out.next = queue.peek();
+                    }
+                }
+            }
+        }
+    }
+
+    //    138. Copy List with Random Pointer
+    //    https://leetcode.com/problems/copy-list-with-random-pointer/
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if (head == null) {
+            return null;
+        }
+        Map<RandomListNode, Integer> map = new HashMap<>();
+        int index = 0;
+        RandomListNode node = head;
+        while (node != null) {
+            map.put(node, index);
+            index++;
+            node = node.next;
+        }
+        RandomListNode[] array = new RandomListNode[map.size()];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = new RandomListNode(0);
+        }
+        node = head;
+        index = 0;
+        while (node != null) {
+            array[index].label = node.label;
+            if (index != map.size() - 1) {
+                array[index].next = array[index + 1];
+            }
+            if (node.random != null) {
+                int i = map.get(node.random);
+                array[index].random = array[i];
+            }
+            index++;
+            node = node.next;
+        }
+        return array[0];
+    }
+
+    //    133. Clone Graph
+    //    https://leetcode.com/problems/clone-graph/
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        if (node == null) {
+            return null;
+        }
+        Set<UndirectedGraphNode> allNodes = new HashSet<>();
+        undirectedGraphNodeDFS(node, allNodes);
+        Map<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
+        for (UndirectedGraphNode eachNode : allNodes) {
+            map.put(eachNode, new UndirectedGraphNode(eachNode.label));
+        }
+        for (UndirectedGraphNode original : allNodes) {
+            UndirectedGraphNode copy = map.get(original);
+            copy.neighbors = new ArrayList<>();
+            for (UndirectedGraphNode originalNeighbor : original.neighbors) {
+                copy.neighbors.add(map.get(originalNeighbor));
+            }
+        }
+        return map.get(node);
+    }
+
+    private void undirectedGraphNodeDFS(UndirectedGraphNode node, Set<UndirectedGraphNode> allNodes) {
+        if (!allNodes.contains(node)) {
+            allNodes.add(node);
+            for (UndirectedGraphNode neighbor : node.neighbors) {
+                undirectedGraphNodeDFS(neighbor, allNodes);
+            }
+        }
+    }
+
+    //    310. Minimum Height Trees
+    //    https://leetcode.com/problems/minimum-height-trees/
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if (n == 1) {
+            return Arrays.asList(0);
+        }
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        List<Integer> leaves = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (graph.get(i).size() == 1) {
+                leaves.add(i);
+            }
+        }
+        int leftCount = n;
+        while (leftCount > 2) {
+            leftCount -= leaves.size();
+            List<Integer> newLeaves = new LinkedList<>();
+            for (int leaf : leaves) {
+                int neighbor = graph.get(leaf).get(0);
+                graph.get(neighbor).remove(Integer.valueOf(leaf));
+                if (graph.get(neighbor).size() == 1) {
+                    newLeaves.add(neighbor);
+                }
+
+            }
+            leaves = newLeaves;
+        }
+        return leaves;
+    }
+
+    //    332. Reconstruct Itinerary
+    //    https://leetcode.com/problems/reconstruct-itinerary/
+
+    public List<String> findItinerary(String[][] tickets) {
+        Map<String, List<String>> graph = new HashMap<>();
+        for (String[] ticket : tickets) {
+            if (!graph.containsKey(ticket[0])) {
+                graph.put(ticket[0], new ArrayList<>());
+            }
+            graph.get(ticket[0]).add(ticket[1]);
+        }
+        for (List<String> destinations : graph.values()) {
+            Collections.sort(destinations);
+        }
+        List<String> path = new ArrayList<>();
+        path.add("jfk");
+        int ticketsLeft = tickets.length;
+        path = findItineraryBacktrace(graph, path, ticketsLeft);
+        return path;
+
+    }
+
+    private List<String> findItineraryBacktrace(Map<String, List<String>> graph, List<String> path, int ticketsLeft) {
+        if (ticketsLeft == 0) {
+            return path;
+        }
+        String curretCity = path.get(path.size() - 1);
+        if (graph.get(curretCity) != null && graph.get(curretCity).size() > 0) {
+            int destinationSize = graph.get(curretCity).size();
+            for (int i = 0; i < destinationSize; i++) {
+                String destination = graph.get(curretCity).get(i);
+                path.add(destination);
+                graph.get(curretCity).remove(i);
+                List<String> result = findItineraryBacktrace(graph, path, ticketsLeft - 1);
+                if (result != null) {
+                    return result;
+                }
+                path.remove(path.size() - 1);
+                graph.get(curretCity).add(i, destination);
+            }
+        }
+        return null;
+    }
+
+
 }
 
 

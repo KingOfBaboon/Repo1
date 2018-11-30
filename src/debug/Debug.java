@@ -9,4 +9,12 @@ public class Debug {
         }
         return sb.toString();
     }
+
+    public static String getArrayPrint(boolean[] matrix) {
+        StringBuilder sb = new StringBuilder();
+        for (boolean aMatrix : matrix) {
+            sb.append(aMatrix? 1 : 0).append("    ");
+        }
+        return sb.toString();
+    }
 }

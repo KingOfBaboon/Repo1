@@ -1,6 +1,7 @@
 package leetCode;
 
 import dataStructure.ListNode;
+import dataStructure.RandomListNode;
 import dataStructure.TreeNode;
 import org.junit.Before;
 import org.junit.Test;
@@ -939,7 +940,197 @@ public class MainTest {
     }
 
     @Test
-    public void test() {
+    public void countNodes() {
+        TreeNode node = new TreeNode(Arrays.asList(1, 2, 3, 4, 5, 6, null));
+        int a = main.countNodes(node);
+        assertEquals(6, a);
+    }
+
+    @Test
+    public void countNodes2() {
+    }
+
+    @Test
+    public void addTwoNumbers2() {
+    }
+
+    @Test
+    public void lengthOfLongestSubstring() {
+        int a = main.lengthOfLongestSubstring("pwwkew");
+        System.out.println(a);
+    }
+
+    @Test
+    public void isMatch() {
+    }
+
+    @Test
+    public void generateParenthesis() {
+        main.generateParenthesis(3);
+    }
+
+    @Test
+    public void mergeKLists() {
+    }
+
+    @Test
+    public void nextPermutation() {
+        main.nextPermutation(new int[]{1, 3, 2});
+
+    }
+
+    @Test
+    public void longestValidParentheses() {
+    }
+
+    @Test
+    public void longestValidParentheses2() {
+    }
+
+    @Test
+    public void longestValidParenthesesStack() {
+    }
+
+    @Test
+    public void trap() {
+        int a = main.trap(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1});
+        System.out.println(a);
+    }
+
+    @Test
+    public void rotate() {
+        main.rotate(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+    }
+
+    @Test
+    public void groupAnagrams() {
+    }
+
+    @Test
+    public void myAtoi() {
+    }
+
+    @Test
+    public void firstMissingPositive() {
+    }
+
+    @Test
+    public void isMatch2() {
+        System.out.println(System.currentTimeMillis());
+        boolean a = main.isMatch2(
+                "aa",
+                "*");
+        System.out.println(a);
+        System.out.println(System.currentTimeMillis());
+
+    }
+
+    @Test
+    public void myPow() {
+    }
+
+    @Test
+    public void spiralOrder() {
+        List<Integer> result = main.spiralOrder(new int[][]{
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        });
+        System.out.println(result);
+    }
+
+    @Test
+    public void mergeIntervals() {
+        List<Main.Interval> intervals = new ArrayList<>();
+        intervals.add(new Main.Interval(1, 3));
+        intervals.add(new Main.Interval(2, 6));
+        intervals.add(new Main.Interval(8, 10));
+        intervals.add(new Main.Interval(15, 18));
+        List<Main.Interval> result = main.mergeIntervals(intervals);
+
+    }
+
+    @Test
+    public void setZeroes() {
+    }
+
+    @Test
+    public void minWindow() {
+        String a = main.minWindow("cabwefgewcwaefgcf",
+                "cae");
+        System.out.println(a);
+    }
+
+    @Test
+    public void largestRectangleArea() {
+        main.largestRectangleArea(new int[]{3,2,1});
+    }
+
+    @Test
+    public void largestRectangleArea2() {
+    }
+
+    @Test
+    public void buildTree() {
+    }
+
+    @Test
+    public void connect() {
+    }
+
+    @Test
+    public void copyRandomList() {
+        RandomListNode node1 = new RandomListNode(1);
+        RandomListNode node2 = new RandomListNode(2);
+        RandomListNode node3 = new RandomListNode(3);
+        RandomListNode node4 = new RandomListNode(4);
+        RandomListNode node5 = new RandomListNode(5);
+
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+
+        node1.random = node3;
+        node2.random = node4;
+        node4.random = node1;
+        node5.random = node1;
+
+        main.copyRandomList(node1);
+    }
+
+    @Test
+    public void canFinishDFS() {
+    }
+
+    @Test
+    public void canFinishKahn() {
+    }
+
+    @Test
+    public void findOrderKahn() {
+    }
+
+    @Test
+    public void cloneGraph() {
+    }
+
+    @Test
+    public void findMinHeightTrees() {
+    }
+
+    @Test
+    public void findItinerary() {
+        main.findItinerary(new String[][]{
+                {"jfk", "a"},
+                {"jfk", "d"},
+                {"a", "c"},
+                {"c", "d"},
+                {"c", "jfk"},
+                {"b", "c"},
+                {"d", "b"},
+                {"d", "a"}
+        });
     }
 }
 
